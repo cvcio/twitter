@@ -11,7 +11,7 @@ go get github.com/cvcio/twitter
 ### Supported Endpoints
 
 | Method | Implemented | OAuth | Rate Limit | Official Documentation |
-|--------|----------|----------|------|------------|------------------------|
+|--------|----------|------|------------|------------------------|
 | `VerifyCredentials` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | - | - |
 | `GetUserFollowers` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 15/15m (app), 15/15m (user) | [Get User Followers](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-followers) |
 | `GetUserFollowing` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 15/15m (app), 15/15m (user) | [Get User Following](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
