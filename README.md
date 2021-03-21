@@ -10,25 +10,25 @@ go get github.com/cvcio/twitter
 
 ### Supported Endpoints
 
-| Method | Implemented | Endpoint | OAuth | Rate Limit | Official Documentation |
+| Method | Implemented | OAuth | Rate Limit | Official Documentation |
 |--------|----------|----------|------|------------|------------------------|
-| `VerifyCredentials` | Yes | - | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | - | - |
-| `GetUserFollowers` | Yes | `https://api.twitter.com/2/users/:id/followers` | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 15/15m (app), 15/15m (user) | [Get User Followers](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-followers) |
-| `GetUserFollowing` | Yes | `https://api.twitter.com/2/users/:id/following` | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 15/15m (app), 15/15m (user) | [Get User Following](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
-| `GetUsers` | Not Yet | ` https://api.twitter.com/2/users` | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Users](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
-| `GetUsersBy` | Not Yet | `https://api.twitter.com/2/users/by` | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Users By](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
-| `GetUserByID` | Not Yet | `https://api.twitter.com/2/users/:id` | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get User By Id](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
-| `GetUsersByUserName` | Not Yet | `https://api.twitter.com/2/users/by/username/:username` | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Users By Screen Name](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
-| `GetUserTweets` | Yes | `https://api.twitter.com/2/users/:id/tweets` | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 1500/15m (app), 900/15m (user) | [Get User Tweets](https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-tweets) |
-| `GetUserMentions` | Not Yet | `https://api.twitter.com/2/users/:id/mentions` | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 450/15m (app), 180/15m (user) | [Get User Mentions](https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-mentions) |
-| `GetTweets` | Not Yet | `https://api.twitter.com/2/tweets` | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Tweets](https://developer.twitter.com/en/docs/twitter-api/tweets/lookup/api-reference/get-tweets) |
-| `GetTweetByID` | Not Yet | `https://api.twitter.com/2/tweets/:id` | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Tweets By Id](https://developer.twitter.com/en/docs/twitter-api/tweets/lookup/api-reference/get-tweets-id) |
-| `GetFilterStream` | Not Yet | `https://api.twitter.com/2/tweets/search/stream` | OAuth 2.0 Bearer Token | 50/15m (app) | [Filter Stream](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference/get-tweets-search-stream) |
-| `GetFilterStreamRules` | Not Yet | `https://api.twitter.com/2/tweets/search/stream/rules` | OAuth 2.0 Bearer Token | 450/15m (app) | [Get Filter Stream Rules](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference/get-tweets-search-stream-rules)
-| `PostFilterStreamRules` | Not Yet | `https://api.twitter.com/2/tweets/search/stream/rules` | OAuth 2.0 Bearer Token | 450/15m (app) | [Post Filter Stream Rules](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference/post-tweets-search-stream-rules)
-| `GetSampleStream` | Not Yet | `https://api.twitter.com/2/tweets/sample/stream` | OAuth 2.0 Bearer Token | 50/15m (app) | [Sample Stream](https://developer.twitter.com/en/docs/twitter-api/tweets/sampled-stream/api-reference/get-tweets-sample-stream)
-| `GetTweetsSearchRecent` | Not Yet | `https://api.twitter.com/2/tweets/search/recent` | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 450/15m (app), 180/15m (user) | [Sample Stream](https://developer.twitter.com/en/docs/twitter-api/tweets/search/api-reference/get-tweets-search-recent)
-| `GetTweetsSearchAll` | Not Yet | `https://api.twitter.com/2/tweets/search/all` | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 1/1s (user) | [Sample Stream](https://developer.twitter.com/en/docs/twitter-api/tweets/full-archive-search/api-reference/get-tweets-search-all)
+| `VerifyCredentials` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | - | - |
+| `GetUserFollowers` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 15/15m (app), 15/15m (user) | [Get User Followers](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-followers) |
+| `GetUserFollowing` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 15/15m (app), 15/15m (user) | [Get User Following](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
+| `GetUsers` | Not Yet | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Users](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
+| `GetUsersBy` | Not Yet | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Users By](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
+| `GetUserByID` | Not Yet | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get User By Id](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
+| `GetUsersByUserName` | Not Yet | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Users By Screen Name](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
+| `GetUserTweets` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 1500/15m (app), 900/15m (user) | [Get User Tweets](https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-tweets) |
+| `GetUserMentions` | Not Yet | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 450/15m (app), 180/15m (user) | [Get User Mentions](https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-mentions) |
+| `GetTweets` | Not Yet | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Tweets](https://developer.twitter.com/en/docs/twitter-api/tweets/lookup/api-reference/get-tweets) |
+| `GetTweetByID` | Not Yet | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Tweets By Id](https://developer.twitter.com/en/docs/twitter-api/tweets/lookup/api-reference/get-tweets-id) |
+| `GetFilterStream` | Not Yet | OAuth 2.0 Bearer Token | 50/15m (app) | [Filter Stream](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference/get-tweets-search-stream) |
+| `GetFilterStreamRules` | Not Yet | OAuth 2.0 Bearer Token | 450/15m (app) | [Get Filter Stream Rules](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference/get-tweets-search-stream-rules)
+| `PostFilterStreamRules` | Not Yet | OAuth 2.0 Bearer Token | 450/15m (app) | [Post Filter Stream Rules](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference/post-tweets-search-stream-rules)
+| `GetSampleStream` | Not Yet | OAuth 2.0 Bearer Token | 50/15m (app) | [Sample Stream](https://developer.twitter.com/en/docs/twitter-api/tweets/sampled-stream/api-reference/get-tweets-sample-stream)
+| `GetTweetsSearchRecent` | Not Yet | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 450/15m (app), 180/15m (user) | [Sample Stream](https://developer.twitter.com/en/docs/twitter-api/tweets/search/api-reference/get-tweets-search-recent)
+| `GetTweetsSearchAll` | Not Yet | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 1/1s (user) | [Sample Stream](https://developer.twitter.com/en/docs/twitter-api/tweets/full-archive-search/api-reference/get-tweets-search-all)
 
 ### Usage
 
