@@ -72,7 +72,7 @@ func Test_GetUserFollowers(t *testing.T) {
 
 	v := url.Values{}
 	v.Add("max_results", "50")
-	res, errs := api.GetUserFollowers("44142397", v, twitter.WithRate(15*time.Minute/15), twitter.WithAuto(false)) // @andefined
+	res, _ := api.GetUserFollowers("44142397", v, twitter.WithRate(15*time.Minute/15), twitter.WithAuto(false)) // @andefined
 	for {
 		r, ok := <-res
 
@@ -86,16 +86,6 @@ func Test_GetUserFollowers(t *testing.T) {
 		}
 
 		json.Unmarshal(b, &data)
-	}
-
-	for {
-		r, ok := <-errs
-
-		if !ok {
-			break
-		}
-
-		t.Fatalf("json Marshar Error: %v", r)
 	}
 
 	if len(data) != 50 {
@@ -112,7 +102,7 @@ func Test_GetUserFollowing(t *testing.T) {
 
 	v := url.Values{}
 	v.Add("max_results", "50")
-	res, errs := api.GetUserFollowing("44142397", v, twitter.WithRate(15*time.Minute/15), twitter.WithAuto(false)) // @andefined
+	res, _ := api.GetUserFollowing("44142397", v, twitter.WithRate(15*time.Minute/15), twitter.WithAuto(false)) // @andefined
 	for {
 		r, ok := <-res
 
@@ -126,16 +116,6 @@ func Test_GetUserFollowing(t *testing.T) {
 		}
 
 		json.Unmarshal(b, &data)
-	}
-
-	for {
-		r, ok := <-errs
-
-		if !ok {
-			break
-		}
-
-		t.Fatalf("json Marshar Error: %v", r)
 	}
 
 	if len(data) != 50 {
@@ -152,7 +132,7 @@ func Test_GetUserTweets(t *testing.T) {
 
 	v := url.Values{}
 	v.Add("max_results", "50")
-	res, errs := api.GetUserTweets("44142397", v, twitter.WithRate(15*time.Minute/1500), twitter.WithAuto(false)) // @andefined
+	res, _ := api.GetUserTweets("44142397", v, twitter.WithRate(15*time.Minute/1500), twitter.WithAuto(false)) // @andefined
 	for {
 		r, ok := <-res
 
@@ -166,16 +146,6 @@ func Test_GetUserTweets(t *testing.T) {
 		}
 
 		json.Unmarshal(b, &data)
-	}
-
-	for {
-		r, ok := <-errs
-
-		if !ok {
-			break
-		}
-
-		t.Fatalf("json Marshar Error: %v", r)
 	}
 
 	if len(data) != 50 {
