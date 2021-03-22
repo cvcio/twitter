@@ -5,7 +5,7 @@ import "time"
 // Response Struct
 type Response struct {
 	Results Data
-	Error   error
+	Error   *APIError
 }
 
 // Meta Struct

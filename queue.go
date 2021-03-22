@@ -67,9 +67,8 @@ func (q *Queue) processRequests(api *Twitter) {
 
 		// capture request errors
 		if err != nil {
-			fmt.Println(err)
-			apiError := NewAPIError(err)
-			if apiError.Code == 429 {
+			// fmt.Println(err)
+			if err.Code == 429 {
 				// if err == rate limit then add req to channel again and continue
 				go func(c *Queue, r *Request) {
 					c.requestsChannel <- r
@@ -78,7 +77,7 @@ func (q *Queue) processRequests(api *Twitter) {
 				// get the delay
 				delay := time.Tick(q.delay)
 
-				fmt.Printf("Error %s. Delay request for %s\n", apiError.Message, q.delay.String())
+				fmt.Printf("Error %s. Delay request for %s\n", err.Message, q.delay.String())
 				// delay next request for q.delay duration
 				<-delay
 

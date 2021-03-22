@@ -47,7 +47,7 @@ func (api *Twitter) GetUserFollowers(id string, v url.Values, options ...QueueOp
 			d <- &res.Results
 			// send errors to error channel
 			if res.Error != nil {
-				e <- NewAPIError(res.Error)
+				e <- res.Error
 			}
 
 			// if there is a next page, transform the original request object
@@ -120,7 +120,7 @@ func (api *Twitter) GetUserFollowing(id string, v url.Values, options ...QueueOp
 			d <- &res.Results
 			// send errors to error channel
 			if res.Error != nil {
-				e <- NewAPIError(res.Error)
+				e <- res.Error
 			}
 			// if there is a next page, transform the original request object
 			// by setting the `pagination_token` parameter to get the next page
@@ -156,25 +156,215 @@ func (api *Twitter) GetUserFollowing(id string, v url.Values, options ...QueueOp
 // Official Documentation: https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users
 // Authentication Methods: OAuth 1.0a User Context, OAuth 2.0 Bearer Token
 // Rate Limit: 300/15m (app), 900/15m (user)
-func (api *Twitter) GetUsers() {}
+func (api *Twitter) GetUsers(v url.Values, options ...QueueOption) (chan *Data, chan *APIError) {
+	// create the queue to process requests
+	queue := NewQueue(15*time.Minute/15, 15*time.Minute, true, make(chan *Request), make(chan *Response), options...)
+	// create the temp results channel
+	data := make(chan *Data)
+	errors := make(chan *APIError)
+	// create the request object
+	request, _ := NewRquest("GET", fmt.Sprintf("%s/users", api.baseURL), v)
+	// start the requests channel processor
+	go queue.processRequests(api)
+	// add the 1st request to the channel
+	queue.requestsChannel <- request
+
+	// async process the response channel
+	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
+		// on done close channels
+		// close response channel
+		defer close(q.responseChannel)
+		// close data channel
+		defer close(d)
+		// close error channel
+		defer close(e)
+
+		// listen channel
+		for {
+			// capture the response and channel state
+			res, ok := <-q.responseChannel
+			// break the loop if the channel is closed
+			if !ok {
+				break
+			}
+
+			// send the results to the data channel
+			d <- &res.Results
+			// send errors to error channel
+			if res.Error != nil {
+				e <- res.Error
+			}
+			// we are done! break the loop and close the channels
+			break
+		}
+		// make sure to close the requestsChannel
+		close(queue.requestsChannel)
+	})(queue, data, errors, request)
+
+	// return the data channel
+	return data, errors
+}
 
 // GetUsersByUserName returns a variety of information about one or more users specified by their usernames.
 // Endpoint URL: https://api.twitter.com/2/users/by
 // Official Documentation: https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-by
 // Authentication Methods: OAuth 1.0a User Context, OAuth 2.0 Bearer Token
 // Rate Limit: 300/15m (app), 900/15m (user)
-func (api *Twitter) GetUsersBy(usernames []string) {}
+func (api *Twitter) GetUsersBy(v url.Values, options ...QueueOption) (chan *Data, chan *APIError) {
+	// create the queue to process requests
+	queue := NewQueue(15*time.Minute/15, 15*time.Minute, true, make(chan *Request), make(chan *Response), options...)
+	// create the temp results channel
+	data := make(chan *Data)
+	errors := make(chan *APIError)
+	// create the request object
+	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/by", api.baseURL), v)
+	// start the requests channel processor
+	go queue.processRequests(api)
+	// add the 1st request to the channel
+	queue.requestsChannel <- request
+
+	// async process the response channel
+	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
+		// on done close channels
+		// close response channel
+		defer close(q.responseChannel)
+		// close data channel
+		defer close(d)
+		// close error channel
+		defer close(e)
+
+		// listen channel
+		for {
+			// capture the response and channel state
+			res, ok := <-q.responseChannel
+			// break the loop if the channel is closed
+			if !ok {
+				break
+			}
+
+			// send the results to the data channel
+			d <- &res.Results
+			// send errors to error channel
+			if res.Error != nil {
+				e <- res.Error
+			}
+			// we are done! break the loop and close the channels
+			break
+		}
+		// make sure to close the requestsChannel
+		close(queue.requestsChannel)
+	})(queue, data, errors, request)
+
+	// return the data channel
+	return data, errors
+}
 
 // GetUserByID returns a variety of information about a single user specified by the requested ID.
 // Endpoint URL: https://api.twitter.com/2/users/:id
 // Official Documentation: https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-id
 // Authentication Methods: OAuth 1.0a User Context, OAuth 2.0 Bearer Token
 // Rate Limit: 300/15m (app), 900/15m (user)
-func (api *Twitter) GetUserByID() {}
+func (api *Twitter) GetUserByID(id string, v url.Values, options ...QueueOption) (chan *Data, chan *APIError) {
+	// create the queue to process requests
+	queue := NewQueue(15*time.Minute/15, 15*time.Minute, true, make(chan *Request), make(chan *Response), options...)
+	// create the temp results channel
+	data := make(chan *Data)
+	errors := make(chan *APIError)
+	// create the request object
+	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/%s", api.baseURL, id), v)
+	// start the requests channel processor
+	go queue.processRequests(api)
+	// add the 1st request to the channel
+	queue.requestsChannel <- request
+
+	// async process the response channel
+	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
+		// on done close channels
+		// close response channel
+		defer close(q.responseChannel)
+		// close data channel
+		defer close(d)
+		// close error channel
+		defer close(e)
+
+		// listen channel
+		for {
+			// capture the response and channel state
+			res, ok := <-q.responseChannel
+			// break the loop if the channel is closed
+			if !ok {
+				break
+			}
+
+			// send the results to the data channel
+			d <- &res.Results
+			// send errors to error channel
+			if res.Error != nil {
+				e <- res.Error
+			}
+
+			// we are done! break the loop and close the channels
+			break
+		}
+		// make sure to close the requestsChannel
+		close(queue.requestsChannel)
+	})(queue, data, errors, request)
+
+	// return the data channel
+	return data, errors
+}
 
 // GetUserByUserName returns a variety of information about one or more users specified by their usernames.
 // Endpoint URL: https://api.twitter.com/2/users/by/username/:username
 // Official Documentation: https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-by-username-username
 // Authentication Methods: OAuth 1.0a User Context, OAuth 2.0 Bearer Token
 // Rate Limit: 300/15m (app), 900/15m (user)
-func (api *Twitter) GetUsersByUserName() {}
+func (api *Twitter) GetUsersByUserName(username string, v url.Values, options ...QueueOption) (chan *Data, chan *APIError) {
+	// create the queue to process requests
+	queue := NewQueue(15*time.Minute/15, 15*time.Minute, true, make(chan *Request), make(chan *Response), options...)
+	// create the temp results channel
+	data := make(chan *Data)
+	errors := make(chan *APIError)
+	// create the request object
+	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/by/username/%s", api.baseURL, username), v)
+	// start the requests channel processor
+	go queue.processRequests(api)
+	// add the 1st request to the channel
+	queue.requestsChannel <- request
+
+	// async process the response channel
+	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
+		// on done close channels
+		// close response channel
+		defer close(q.responseChannel)
+		// close data channel
+		defer close(d)
+		// close error channel
+		defer close(e)
+
+		// listen channel
+		for {
+			// capture the response and channel state
+			res, ok := <-q.responseChannel
+			// break the loop if the channel is closed
+			if !ok {
+				break
+			}
+
+			// send the results to the data channel
+			d <- &res.Results
+			// send errors to error channel
+			if res.Error != nil {
+				e <- res.Error
+			}
+
+			// we are done! break the loop and close the channels
+			break
+		}
+		// make sure to close the requestsChannel
+		close(queue.requestsChannel)
+	})(queue, data, errors, request)
+
+	// return the data channel
+	return data, errors
+}
