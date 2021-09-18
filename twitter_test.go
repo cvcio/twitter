@@ -21,7 +21,7 @@ var (
 func Test_NewTwitter_Client(t *testing.T) {
 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
-		t.Fatalf("Couldn't create Twitter API HTTPClient")
+		t.Fatalf("Couldn't create Twitter API HTTP Client")
 	}
 	if api.GetClient() == nil {
 		t.Fatalf("Twitter API HTTP Client returned nil")
@@ -31,7 +31,7 @@ func Test_NewTwitter_Client(t *testing.T) {
 func Test_NewTwitterWithContext_Client(t *testing.T) {
 	api, err := twitter.NewTwitterWithContext(consumerKey, consumerSecret, accessToken, accessTokenSecret)
 	if err != nil {
-		t.Fatalf("Couldn't create Twitter API HTTPClient")
+		t.Fatalf("Couldn't create Twitter API HTTP Client")
 	}
 	if api.GetClient() == nil {
 		t.Fatalf("Twitter API HTTP Client returned nil")
