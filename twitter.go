@@ -20,6 +20,7 @@ const (
 	AccessTokenURL     = "https://api.twitter.com/oauth/access_token"
 	TokenURL           = "https://api.twitter.com/oauth2/token"
 	RateLimitStatusURL = "https://api.twitter.com/1.1/application/rate_limit_status.json"
+	VerifyCredentials  = "https://api.twitter.com/1.1/account/verify_credentials.json"
 )
 
 // Twitter API Client
@@ -96,9 +97,9 @@ func (api *Twitter) GetClient() *http.Client {
 }
 
 // VerifyCredentials returns bool upon successful request. This method will make a request
-// on the rate-limit endpoint since there is no official token validation method.
+// on the account/verify_credentials endpoint.
 func (api *Twitter) VerifyCredentials() (bool, *APIError) {
-	response, err := api.client.Get(RateLimitStatusURL)
+	response, err := api.client.Get(VerifyCredentials)
 	if err != nil {
 		return false, &APIError{0, err.Error()}
 	}
