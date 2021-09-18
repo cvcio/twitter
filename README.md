@@ -1,4 +1,4 @@
-# Twitter API v2 Client for [Go](https://golang.org/)
+# Twitter API v2 Client for Go
 
 **twitter** is a Go package for the [Twitter v2 API](https://developer.twitter.com/en/docs/twitter-api/early-access), inspired by [ChimeraCoder/anaconda](https://github.com/ChimeraCoder/anaconda). This library uses channels for both, to retrieve data from Twitter API and return the results, with a built-in throttle to avoid rate-limit errors return from Twitter. You can bypass the throttling by usgin `twitter.WithRate(time.Duration)` option. The library will auto paginate results unless you use the `twitter.WithAuto(false)` option.
 
