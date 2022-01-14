@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"net/url"
+	"strconv"
 	"time"
 
 	"github.com/cvcio/twitter"
@@ -27,9 +28,17 @@ func main() {
 		panic(err)
 	}
 
+	fmt.Print("ID,CreatedAt,Name,UserName,Protected,Verified,Followers,Following,Tweets,Listed,ProfileImageURL\n")
+
 	v := url.Values{}
+	// set size of response ids to 1000
 	v.Add("max_results", "1000")
-	followers, _ := api.GetUserFollowers(*id, v)
+	// set user fields to return
+	v.Add("user.fields", "created_at,description,id,location,name,pinned_tweet_id,profile_image_url,protected,public_metrics,url,username,verified")
+	// set tweet fields to return
+	v.Add("tweet.fields", "created_at,id,lang,source,public_metrics")
+
+	followers, _ := api.GetUserFollowers(*id, v, twitter.WithRate(15*time.Minute/15), twitter.WithAuto(true))
 
 	for {
 		r, ok := <-followers
@@ -45,15 +54,26 @@ func main() {
 
 		var data []*twitter.User
 		json.Unmarshal(b, &data)
+
 		for _, v := range data {
-			fmt.Printf("%s,%s,%s\n", v.ID, v.UserName, v.Name)
+			fmt.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
+				v.ID,
+				v.CreatedAt,
+				v.Name,
+				v.UserName,
+				strconv.FormatBool(v.Protected),
+				strconv.FormatBool(v.Verified),
+				strconv.Itoa(v.PublicMetrics.Followers),
+				strconv.Itoa(v.PublicMetrics.Following),
+				strconv.Itoa(v.PublicMetrics.Tweets),
+				strconv.Itoa(v.PublicMetrics.Listed),
+				v.ProfileImageURL,
+			)
 		}
 
-		fmt.Println()
 		fmt.Printf("Result Count: %d Next Token: %s\n", r.Meta.ResultCount, r.Meta.NextToken)
 	}
 
 	end := time.Now()
-
 	fmt.Printf("Done in %s", end.Sub(start))
 }

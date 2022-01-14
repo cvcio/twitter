@@ -1,7 +1,6 @@
 package twitter
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -14,32 +13,41 @@ type Queue struct {
 	rate            time.Duration
 	delay           time.Duration
 	auto            bool
+	closeChannels   bool
 	requestsChannel chan *Request
 	responseChannel chan *Response
 }
 
+// QueueOption queue options
 type QueueOption func(*Queue)
 
+// WithRate (default: according to endpoint) adjusts the the duration between each request to avoid
+// rate limits from Twitter API
 func WithRate(rate time.Duration) QueueOption {
 	return func(q *Queue) {
 		q.rate = rate
 	}
 }
 
+// WithDelay (default:15 minutes) adjusts the the duration between each errored requests
+// due to rate limit errors from Twitter API
 func WithDelay(delay time.Duration) QueueOption {
 	return func(q *Queue) {
 		q.delay = delay
 	}
 }
 
+// WithAuto (default:true) will auto continue to the next page if
+// pagination_token exists in the response object
 func WithAuto(auto bool) QueueOption {
 	return func(q *Queue) {
 		q.auto = auto
 	}
 }
 
+// NewQueue creates a new queue
 func NewQueue(rate, delay time.Duration, auto bool, in chan *Request, out chan *Response, options ...QueueOption) *Queue {
-	queue := &Queue{rate, delay, auto, in, out}
+	queue := &Queue{rate, delay, auto, true, in, out}
 
 	for _, o := range options {
 		o(queue)
@@ -51,35 +59,32 @@ func NewQueue(rate, delay time.Duration, auto bool, in chan *Request, out chan *
 // processRequests, processes the incoming requests and with a build-in rate-limiter
 // to avoid any rate-limit errors from Twitter API
 func (q *Queue) processRequests(api *Twitter) {
-	// get queue throttle
-	throttle := time.Tick(q.rate)
+	// close queue's channels
+	defer q.Close()
+
 	// listen channel
 	for {
 		// capture input request and channel state
-		req, ok := <-q.requestsChannel
+		req := <-q.requestsChannel
+
 		// break the loop if the channel is closed
-		if !ok {
-			break
-		}
+		// if !ok {
+		// 	break
+		// }
 
 		// send the request on twitter api
 		err := api.apiDo(req)
 
 		// capture request errors
-		if err != nil {
-			// fmt.Println(err)
-			if err.Code == 429 {
+		if err != nil && q.auto {
+			if err.Code == 420 || err.Code == 429 || err.Code >= 500 {
 				// if err == rate limit then add req to channel again and continue
 				go func(c *Queue, r *Request) {
 					c.requestsChannel <- r
 				}(q, req)
 
-				// get the delay
-				delay := time.Tick(q.delay)
-
-				fmt.Printf("Error %s. Delay request for %s\n", err.Message, q.delay.String())
 				// delay next request for q.delay duration
-				<-delay
+				<-time.After(q.delay)
 
 				// go to start
 				continue
@@ -88,10 +93,17 @@ func (q *Queue) processRequests(api *Twitter) {
 				break
 			}
 		}
+
 		// add response to channel
 		q.responseChannel <- &Response{req.Results, err}
 
 		// throttle requests to avoid rate-limit errors
-		<-throttle
+		<-time.After(q.rate)
 	}
+}
+
+// Close closes requests and response channels
+func (q *Queue) Close() {
+	close(q.requestsChannel)
+	close(q.responseChannel)
 }

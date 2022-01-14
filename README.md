@@ -1,3 +1,7 @@
+[![Language](https://img.shields.io/badge/Language-Go-blue.svg)](https://golang.org/)
+[![GoDoc](https://pkg.go.dev/badge/github.com/cvcio/twitter)](https://pkg.go.dev/github.com/cvcio/twitter)
+[![Go Report Card](https://goreportcard.com/badge/github.com/cvcio/twitter)](https://goreportcard.com/report/github.com/cvcio/twitter)
+
 # Twitter API v2 Client for Go
 
 **twitter** is a Go package for the [Twitter v2 API](https://developer.twitter.com/en/docs/twitter-api/early-access), inspired by [ChimeraCoder/anaconda](https://github.com/ChimeraCoder/anaconda). This library uses channels for both, to retrieve data from Twitter API and return the results, with a built-in throttle to avoid rate-limit errors return from Twitter. You can bypass the throttling by usgin `twitter.WithRate(time.Duration)` option. The library will auto paginate results unless you use the `twitter.WithAuto(false)` option.
@@ -56,11 +60,76 @@ for {
 	...
 }
 ```
+
+Implement with error channel
+
+```go
+v := url.Values{}
+v.Add("max_results", "1000")
+res, errs := api.GetUserFollowing(*id, v, twitter.WithRate(time.Minute/6), twitter.WithAuto(true))
+
+for {
+	select {
+	case r, ok := <-res:
+		if !ok {
+			res = nil
+			break
+		}
+
+		var d []*twitter.User
+		b, err := json.Marshal(r.Data)
+		if err != nil {
+			t.Fatalf("json Marshar Error: %v", err)
+		}
+
+		json.Unmarshal(b, &d)
+
+	case e, ok := <-errs:
+		if !ok {
+			errs = nil
+			break
+		}
+		t.Errorf("Twitter API Error: %v", e)
+	}
+
+	if res == nil && errs == nil {
+		break
+	}
+
+}
+```
+
 #### Options
 
-- `twitter.WithDealy(time.Duration)` 
-- `twitter.WithRate(time.Duration)`
-- `twitter.WithAuth(bool)`
+[cvcio/twitter](https://github.com/cvcio/twitter) supports the following options for all methods. You can pass any option during the method contrstruction.
+
+```go
+followers, _ := api.GetUserFollowers(*id, url.Values{}, twitter.WithDelay(1*time.Minute), twitter.WithRate(1*time.Minute) ...)
+```
+
+##### WithDealy
+
+Adjust the the duration between each errored requests due to rate limit errors from Twitter API by using the `WithDelay` option.
+
+```go
+twitter.WithDelay(time.Duration)
+```
+
+##### WithRate
+
+Throttle requests (distinct for each method) to avoid rate limit errors from Twitter API.
+
+```go
+twitter.WithRate(time.Duration)
+```
+
+##### WithAuto
+
+Auto paginate results (if available) when `pagination_token` is present in the response object.
+
+```go
+twitter.WithAuto(Bool)
+```
 
 ### Examples
 
@@ -134,8 +203,9 @@ If you're new to contributing to Open Source on Github, [this guide](https://ope
 
 ## Contributors
 
-- Dimitris Papaevagelou ([@andefined](https://github.com/andefined))
-- Ilias Dimos ([@dosko64](https://github.com/dosko64))
+<a href="https://github.com/cvcio/twitter/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=cvcio/twitter" />
+</a>
 
 ### License
 

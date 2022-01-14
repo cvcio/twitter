@@ -12,6 +12,7 @@ type Request struct {
 	Results Data
 }
 
+// NewRquest returns a new Request struct
 func NewRquest(method, url string, v url.Values) (*Request, error) {
 	request, err := http.NewRequest(method, url, nil)
 	query := request.URL.Query()
@@ -22,6 +23,7 @@ func NewRquest(method, url string, v url.Values) (*Request, error) {
 	return &Request{request, Data{}}, err
 }
 
+// UpdateURLValues updates request's query values
 func (r *Request) UpdateURLValues(v url.Values) {
 	query := r.Req.URL.Query()
 	for key, value := range v {
@@ -30,6 +32,7 @@ func (r *Request) UpdateURLValues(v url.Values) {
 	r.Req.URL.RawQuery = query.Encode()
 }
 
+// ResetResults resets request's results
 func (r *Request) ResetResults() {
 	r.Results = Data{}
 }

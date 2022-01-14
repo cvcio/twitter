@@ -27,8 +27,6 @@ func (api *Twitter) GetTweetsSearchRecent(v url.Values, options ...QueueOption) 
 	// async process the response channel
 	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
 		// on done close channels
-		// close response channel
-		defer close(q.responseChannel)
 		// close data channel
 		defer close(d)
 		// close error channel
@@ -53,8 +51,6 @@ func (api *Twitter) GetTweetsSearchRecent(v url.Values, options ...QueueOption) 
 			// we are done! break the loop and close the channels
 			break
 		}
-		// make sure to close the requestsChannel
-		close(queue.requestsChannel)
 	})(queue, data, errors, request)
 
 	// return the data channel
@@ -85,8 +81,6 @@ func (api *Twitter) GetTweetsSearchAll(v url.Values, options ...QueueOption) (ch
 	// async process the response channel
 	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
 		// on done close channels
-		// close response channel
-		defer close(q.responseChannel)
 		// close data channel
 		defer close(d)
 		// close error channel
@@ -111,8 +105,6 @@ func (api *Twitter) GetTweetsSearchAll(v url.Values, options ...QueueOption) (ch
 			// we are done! break the loop and close the channels
 			break
 		}
-		// make sure to close the requestsChannel
-		close(queue.requestsChannel)
 	})(queue, data, errors, request)
 
 	// return the data channel

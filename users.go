@@ -27,8 +27,6 @@ func (api *Twitter) GetUserFollowers(id string, v url.Values, options ...QueueOp
 	// async process the response channel
 	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
 		// on done close channels
-		// close response channel
-		defer close(q.responseChannel)
 		// close data channel
 		defer close(d)
 		// close error channel
@@ -71,8 +69,6 @@ func (api *Twitter) GetUserFollowers(id string, v url.Values, options ...QueueOp
 			// we are done! break the loop and close the channels
 			break
 		}
-		// make sure to close the requestsChannel
-		close(queue.requestsChannel)
 	})(queue, data, errors, request)
 
 	// return the data channel
@@ -100,8 +96,6 @@ func (api *Twitter) GetUserFollowing(id string, v url.Values, options ...QueueOp
 	// async process the response channel
 	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
 		// on done close channels
-		// close response channel
-		defer close(q.responseChannel)
 		// close data channel
 		defer close(d)
 		// close error channel
@@ -122,6 +116,7 @@ func (api *Twitter) GetUserFollowing(id string, v url.Values, options ...QueueOp
 			if res.Error != nil {
 				e <- res.Error
 			}
+
 			// if there is a next page, transform the original request object
 			// by setting the `pagination_token` parameter to get the next page
 			if res.Results.Meta.NextToken != "" && q.auto {
@@ -143,8 +138,6 @@ func (api *Twitter) GetUserFollowing(id string, v url.Values, options ...QueueOp
 			// we are done! break the loop and close the channels
 			break
 		}
-		// make sure to close the requestsChannel
-		close(queue.requestsChannel)
 	})(queue, data, errors, request)
 
 	// return the data channel
@@ -172,8 +165,6 @@ func (api *Twitter) GetUsers(v url.Values, options ...QueueOption) (chan *Data, 
 	// async process the response channel
 	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
 		// on done close channels
-		// close response channel
-		defer close(q.responseChannel)
 		// close data channel
 		defer close(d)
 		// close error channel
@@ -197,8 +188,6 @@ func (api *Twitter) GetUsers(v url.Values, options ...QueueOption) (chan *Data, 
 			// we are done! break the loop and close the channels
 			break
 		}
-		// make sure to close the requestsChannel
-		close(queue.requestsChannel)
 	})(queue, data, errors, request)
 
 	// return the data channel
@@ -226,8 +215,6 @@ func (api *Twitter) GetUsersBy(v url.Values, options ...QueueOption) (chan *Data
 	// async process the response channel
 	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
 		// on done close channels
-		// close response channel
-		defer close(q.responseChannel)
 		// close data channel
 		defer close(d)
 		// close error channel
@@ -251,8 +238,6 @@ func (api *Twitter) GetUsersBy(v url.Values, options ...QueueOption) (chan *Data
 			// we are done! break the loop and close the channels
 			break
 		}
-		// make sure to close the requestsChannel
-		close(queue.requestsChannel)
 	})(queue, data, errors, request)
 
 	// return the data channel
@@ -280,8 +265,6 @@ func (api *Twitter) GetUserByID(id string, v url.Values, options ...QueueOption)
 	// async process the response channel
 	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
 		// on done close channels
-		// close response channel
-		defer close(q.responseChannel)
 		// close data channel
 		defer close(d)
 		// close error channel
@@ -306,8 +289,6 @@ func (api *Twitter) GetUserByID(id string, v url.Values, options ...QueueOption)
 			// we are done! break the loop and close the channels
 			break
 		}
-		// make sure to close the requestsChannel
-		close(queue.requestsChannel)
 	})(queue, data, errors, request)
 
 	// return the data channel
@@ -335,8 +316,6 @@ func (api *Twitter) GetUsersByUserName(username string, v url.Values, options ..
 	// async process the response channel
 	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
 		// on done close channels
-		// close response channel
-		defer close(q.responseChannel)
 		// close data channel
 		defer close(d)
 		// close error channel
@@ -361,8 +340,6 @@ func (api *Twitter) GetUsersByUserName(username string, v url.Values, options ..
 			// we are done! break the loop and close the channels
 			break
 		}
-		// make sure to close the requestsChannel
-		close(queue.requestsChannel)
 	})(queue, data, errors, request)
 
 	// return the data channel

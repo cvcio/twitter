@@ -20,7 +20,6 @@ const (
 	AccessTokenURL     = "https://api.twitter.com/oauth/access_token"
 	TokenURL           = "https://api.twitter.com/oauth2/token"
 	RateLimitStatusURL = "https://api.twitter.com/1.1/application/rate_limit_status.json"
-	VerifyCredentials  = "https://api.twitter.com/1.1/account/verify_credentials.json"
 )
 
 // Twitter API Client
@@ -30,7 +29,7 @@ type Twitter struct {
 	queue   *Queue
 }
 
-// NewTwitter return a new Twitter API v2 Client using OAuth 2.0 based authentication.
+// NewTwitter returns a new Twitter API v2 Client using OAuth 2.0 based authentication.
 // This method is usufull when you only need to make Application-Only requests.
 // Official Documentation: https://developer.twitter.com/en/docs/authentication/oauth-2-0
 func NewTwitter(consumerKey, consumerSecret string) (*Twitter, *APIError) {
@@ -97,9 +96,9 @@ func (api *Twitter) GetClient() *http.Client {
 }
 
 // VerifyCredentials returns bool upon successful request. This method will make a request
-// on the account/verify_credentials endpoint.
+// on the rate-limit endpoint since there is no official token validation method.
 func (api *Twitter) VerifyCredentials() (bool, *APIError) {
-	response, err := api.client.Get(VerifyCredentials)
+	response, err := api.client.Get(RateLimitStatusURL)
 	if err != nil {
 		return false, &APIError{0, err.Error()}
 	}
@@ -140,4 +139,23 @@ func (api *Twitter) apiDo(req *Request) *APIError {
 	}
 
 	return parseResponse(resp, &req.Results)
+}
+
+// apiDoRest send's the request to Twitter API and returns an error.
+// The results are processed by `parseResponse` and written to the temporary
+// `req.Results` interaface.
+func (api *Twitter) apiDoRest(req *Request) (*http.Response, *APIError) {
+	// fmt.Println(req.Req.URL.String())
+	resp, err := api.client.Do(req.Req)
+	if err != nil {
+		return nil, &APIError{0, err.Error()}
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return nil, &APIError{resp.StatusCode, resp.Status}
+	}
+
+	return resp, nil
 }

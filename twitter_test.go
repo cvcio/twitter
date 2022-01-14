@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	twitter "github.com/cvcio/twitter"
+	"github.com/cvcio/twitter"
 )
 
 var (
@@ -72,6 +72,9 @@ func Test_GetUserFollowers(t *testing.T) {
 
 	v := url.Values{}
 	v.Add("max_results", "50")
+	v.Add("user.fields", "created_at,description,id,location,name,pinned_tweet_id,profile_image_url,protected,public_metrics,url,username,verified")
+	v.Add("expansions", "pinned_tweet_id")
+	v.Add("tweet.fields", "created_at,id,lang,source,public_metrics")
 	res, errs := api.GetUserFollowers("44142397", v, twitter.WithRate(15*time.Minute/15), twitter.WithAuto(false)) // @andefined
 
 	for {
@@ -113,7 +116,7 @@ func Test_GetUserFollowers_Error(t *testing.T) {
 
 	v := url.Values{}
 	v.Add("max_results", "5000")
-	res, errs := api.GetUserFollowers("44142397", v, twitter.WithRate(15*time.Minute/15), twitter.WithAuto(false)) // @andefined
+	res, errs := api.GetUserFollowers("44142397", v, twitter.WithRate(15*time.Minute/15), twitter.WithAuto(true)) // @andefined
 
 	for {
 		_, rok := <-res
@@ -130,6 +133,53 @@ func Test_GetUserFollowers_Error(t *testing.T) {
 			t.Fatalf("Should have returned 400: %v", e)
 			break
 		}
+	}
+}
+
+func Test_Channels(t *testing.T) {
+	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
+	if err != nil {
+		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+	}
+
+	size := 0
+	v := url.Values{}
+	v.Add("max_results", "1000")
+	res, errs := api.GetUserFollowing("44142397", v, twitter.WithRate(time.Minute/6), twitter.WithAuto(true)) // @andefined
+
+	for {
+		select {
+		case r, ok := <-res:
+			if !ok {
+				res = nil
+				break
+			}
+
+			var d []*twitter.User
+			b, err := json.Marshal(r.Data)
+			if err != nil {
+				t.Fatalf("json Marshar Error: %v", err)
+			}
+
+			json.Unmarshal(b, &d)
+			size += len(d)
+
+		case e, ok := <-errs:
+			if !ok {
+				errs = nil
+				break
+			}
+			t.Errorf("Twitter API Error: %v", e)
+		}
+
+		if res == nil && errs == nil {
+			break
+		}
+
+	}
+
+	if size < 1000 {
+		t.Fatalf("Twitter API GetUserFollowing Error. Should have returned more than 1000, got %d", size)
 	}
 }
 
@@ -305,8 +355,8 @@ func Test_GetUserTweets(t *testing.T) {
 		json.Unmarshal(b, &data)
 	}
 
-	if len(data) != 50 {
-		t.Fatalf("Twitter API GetUserTweets Error. Should have returned 50, got %d", len(data))
+	if len(data) < 1 {
+		t.Fatalf("Twitter API GetUserTweets Error. Should have returned >= 1, got %d", len(data))
 	}
 }
 
@@ -433,3 +483,38 @@ func Test_GetTweetsSearchRecent(t *testing.T) {
 		t.Fatalf("Twitter API GetTweetsSearchRecent Error. Should have returned 100, got %d", len(data))
 	}
 }
+
+// func Test_PostFilterStreamRules(t *testing.T) {
+// 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
+// 	if err != nil {
+// 		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+// 	}
+
+// 	v := url.Values{}
+// 	// v.Add("backfill_minutes", "10")
+// 	res, err := api.PostFilterStreamRules(v)
+// 	if err != nil {
+// 		t.Fatalf("json Marshar Error: %v", err)
+// 	}
+// 	defer res.Body.Close()
+// 	body, _ := ioutil.ReadAll(res.Body)
+
+// 	fmt.Printf("%v %v\n", res, body)
+// }
+
+// func Test_GetFilterStream(t *testing.T) {
+// 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
+// 	if err != nil {
+// 		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+// 	}
+
+// 	v := url.Values{}
+// 	// v.Add("backfill_minutes", "10")
+// 	res, err := api.PostFilterStreamRules(v)
+// 	fmt.Printf("%v %v\n", res, err)
+
+// 	s := api.GetFilterStream(v)
+// 	for t := range s.C {
+// 		fmt.Printf("%v", t)
+// 	}
+// }

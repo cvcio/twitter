@@ -44,3 +44,4 @@ targets/
 bot.yaml
 *.jsondist/
 .env
+examples/the-follower

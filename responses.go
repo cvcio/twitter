@@ -98,11 +98,11 @@ type EntityMention struct {
 
 // Entities response object.
 type Entities struct {
-	Annotations []EntityAnnotation `json:"annotations,omitempty"`
-	URLs        []EntityURL        `json:"urls,omitempty"`
-	HashTags    []EntityTag        `json:"hashtags,omitempty"`
-	Mentions    []EntityMention    `json:"mentions,omitempty"`
-	CashTags    []EntityTag        `json:"cashtags,omitempty"`
+	Annotations []EntityAnnotation `json:"annotations"`
+	URLs        []EntityURL        `json:"urls"`
+	HashTags    []EntityTag        `json:"hashtags"`
+	Mentions    []EntityMention    `json:"mentions"`
+	CashTags    []EntityTag        `json:"cashtags"`
 }
 
 // Withheld response object.
@@ -114,13 +114,13 @@ type Withheld struct {
 
 // TweetMetrics response object.
 type TweetMetrics struct {
-	Retweets          int `json:"retweet_count,omitempty"`
-	Replies           int `json:"reply_count,omitempty"`
-	Likes             int `json:"like_count,omitempty"`
-	Quotes            int `json:"quote_count,omitempty"`
-	Impressions       int `json:"impression_count,omitempty"`
-	URLLinkClicks     int `json:"url_link_clicks,omitempty"`
-	UserProfileClicks int `json:"user_profile_clicks,omitempty"`
+	Retweets          int `json:"retweet_count"`
+	Replies           int `json:"reply_count"`
+	Likes             int `json:"like_count"`
+	Quotes            int `json:"quote_count"`
+	Impressions       int `json:"impression_count"`
+	URLLinkClicks     int `json:"url_link_clicks"`
+	UserProfileClicks int `json:"user_profile_clicks"`
 }
 
 // UserMetrics response object.
@@ -133,38 +133,41 @@ type UserMetrics struct {
 
 // Includes response object.
 type Includes struct {
-	Tweets []Tweet `json:"tweets,omitempty"`
-	Users  []User  `json:"users,omitempty"`
+	Tweets []Tweet `json:"tweets"`
+	Users  []User  `json:"users"`
 }
 
 // Error response object.
 type Error struct{}
+type StreamData struct {
+	Data Tweet `json:"data"`
+}
 
 // Tweet response object as returned from /2/tweets endpoint. For detailed information
 // refer to https://developer.twitter.com/en/docs/twitter-api/tweets/lookup/api-reference/get-tweets.
 type Tweet struct {
-	ID                 string               `json:"id"`
-	Text               string               `json:"text"`
-	CreatedAt          string               `json:"created_at,omitempty"`
-	AuthorID           string               `json:"author_id,omitempty"`
-	ConversationID     string               `json:"converstation_id,omitempty"`
-	InReplyToUserID    string               `json:"in_reply_to_user_id,omitempty"`
-	ReferencedTweets   []*ReferencedTweet   `json:"referenced_tweets,omitempty"`
-	Attachments        *Attachment          `json:"attachments,omitempty"`
-	Geo                *Geo                 `json:"geo,omitempty"`
-	ContextAnnotations []*ContextAnnotation `json:"context_annotations,omitempty"`
-	Entities           *Entities            `json:"entities,omitempty"`
-	Withheld           *TweetMetrics        `json:"withheld,omitempty"`
-	PublicMetrics      *TweetMetrics        `json:"public_metrics,omitempty"`
-	NonPublicMetrics   *TweetMetrics        `json:"non_public_metrics,omitempty"`
-	OrganicMetrics     *TweetMetrics        `json:"organic_metrics,omitempty"`
-	PromotedMetrics    *TweetMetrics        `json:"promoted_metrics,omitempty"`
-	PossibySensitive   bool                 `json:"possiby_sensitive,omitempty"`
-	Lang               string               `json:"lang,omitempty"`
-	ReplySettings      string               `json:"reply_settings,omitempty"`
-	Source             string               `json:"source,omitempty"`
-	Includes           *Includes            `json:"includes,omitempty"`
-	Errors             *Error               `json:"errors,omitempty"`
+	ID                 string              `json:"id"`
+	Text               string              `json:"text"`
+	CreatedAt          string              `json:"created_at"`
+	AuthorID           string              `json:"author_id"`
+	ConversationID     string              `json:"converstation_id"`
+	InReplyToUserID    string              `json:"in_reply_to_user_id"`
+	ReferencedTweets   []ReferencedTweet   `json:"referenced_tweets"`
+	Attachments        Attachment          `json:"attachments"`
+	Geo                Geo                 `json:"geo"`
+	ContextAnnotations []ContextAnnotation `json:"context_annotations"`
+	Entities           Entities            `json:"entities"`
+	Withheld           TweetMetrics        `json:"withheld"`
+	PublicMetrics      TweetMetrics        `json:"public_metrics"`
+	NonPublicMetrics   TweetMetrics        `json:"non_public_metrics"`
+	OrganicMetrics     TweetMetrics        `json:"organic_metrics"`
+	PromotedMetrics    TweetMetrics        `json:"promoted_metrics"`
+	PossibySensitive   bool                `json:"possiby_sensitive"`
+	Lang               string              `json:"lang"`
+	ReplySettings      string              `json:"reply_settings"`
+	Source             string              `json:"source"`
+	Includes           Includes            `json:"includes"`
+	Errors             Error               `json:"errors"`
 }
 
 // CreatedAtTime is a convenience wrapper that returns the Created_at time, parsed as a time.Time struct
@@ -178,22 +181,43 @@ type User struct {
 	ID              string       `json:"id"`
 	Name            string       `json:"name"`
 	UserName        string       `json:"username"`
-	CreatedAt       string       `json:"created_at,omitempty"`
-	Protected       bool         `json:"protected,omitempty"`
-	Withheld        *Withheld    `json:"withheld,omitempty"`
-	Location        string       `json:"location,omitempty"`
-	URL             string       `json:"url,omitempty"`
-	Description     string       `json:"description,omitempty"`
-	Verified        bool         `json:"verified,omitempty"`
-	Entities        *Entities    `json:"entities,omitempty"`
-	ProfileImageURL string       `json:"profile_image_url,omitempty"`
-	PublicMetrics   *UserMetrics `json:"public_metrics,omitempty"`
-	PinnedTweetID   string       `json:"pinned_tweet_id,omitempty"`
-	Includes        *Includes    `json:"includes,omitempty"`
-	Errors          *Error       `json:"errors,omitempty"`
+	CreatedAt       string       `json:"created_at"`
+	Protected       bool         `json:"protected"`
+	Withheld        *Withheld    `json:"withheld"`
+	Location        string       `json:"location"`
+	URL             string       `json:"url"`
+	Description     string       `json:"description"`
+	Verified        bool         `json:"verified"`
+	Entities        *Entities    `json:"entities"`
+	ProfileImageURL string       `json:"profile_image_url"`
+	PublicMetrics   *UserMetrics `json:"public_metrics"`
+	PinnedTweetID   string       `json:"pinned_tweet_id"`
+	Includes        *Includes    `json:"includes"`
+	Errors          *Error       `json:"errors"`
 }
 
 // CreatedAtTime is a convenience wrapper that returns the Created_at time, parsed as a time.Time struct
 func (u User) CreatedAtTime() (time.Time, error) {
 	return time.Parse(time.RubyDate, u.CreatedAt)
+}
+
+type RulesData struct {
+	Value string `json:"value,omitempty"`
+	Tag   string `json:"tag,omitempty"`
+	ID    string `json:"id,omitempty"`
+}
+type RulesSummary struct {
+	Created    int `json:"created,omitempty"`
+	NotCreated int `json:"not_created,omitempty"`
+	Deleted    int `json:"deleted,omitempty"`
+	NotDeleted int `json:"not_deleted,omitempty"`
+}
+type RulesMeta struct {
+	Sent    time.Time     `json:"sent,omitempty"`
+	Summary *RulesSummary `json:"summary,omitempty"`
+}
+
+type Rules struct {
+	Data []RulesData `json:"data,omitempty"`
+	Meta *RulesMeta  `json:"meta,omitempty"`
 }

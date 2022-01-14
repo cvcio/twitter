@@ -27,8 +27,6 @@ func (api *Twitter) GetUserMentions(id string, v url.Values, options ...QueueOpt
 	// async process the response channel
 	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
 		// on done close channels
-		// close response channel
-		defer close(q.responseChannel)
 		// close data channel
 		defer close(d)
 		// close error channel
@@ -70,8 +68,6 @@ func (api *Twitter) GetUserMentions(id string, v url.Values, options ...QueueOpt
 			// we are done! break the loop and close the channels
 			break
 		}
-		// make sure to close the requestsChannel
-		close(queue.requestsChannel)
 	})(queue, data, errors, request)
 
 	// return the data channel
@@ -99,8 +95,6 @@ func (api *Twitter) GetUserTweets(id string, v url.Values, options ...QueueOptio
 	// async process the response channel
 	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
 		// on done close channels
-		// close response channel
-		defer close(q.responseChannel)
 		// close data channel
 		defer close(d)
 		// close error channel
@@ -142,8 +136,6 @@ func (api *Twitter) GetUserTweets(id string, v url.Values, options ...QueueOptio
 			// we are done! break the loop and close the channels
 			break
 		}
-		// make sure to close the requestsChannel
-		close(queue.requestsChannel)
 	})(queue, data, errors, request)
 
 	// return the data channel
@@ -171,8 +163,6 @@ func (api *Twitter) GetTweets(v url.Values, options ...QueueOption) (chan *Data,
 	// async process the response channel
 	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
 		// on done close channels
-		// close response channel
-		defer close(q.responseChannel)
 		// close data channel
 		defer close(d)
 		// close error channel
@@ -214,8 +204,6 @@ func (api *Twitter) GetTweets(v url.Values, options ...QueueOption) (chan *Data,
 			// we are done! break the loop and close the channels
 			break
 		}
-		// make sure to close the requestsChannel
-		close(queue.requestsChannel)
 	})(queue, data, errors, request)
 
 	// return the data channel
@@ -243,8 +231,6 @@ func (api *Twitter) GetTweetByID(id string, v url.Values, options ...QueueOption
 	// async process the response channel
 	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
 		// on done close channels
-		// close response channel
-		defer close(q.responseChannel)
 		// close data channel
 		defer close(d)
 		// close error channel
@@ -269,8 +255,6 @@ func (api *Twitter) GetTweetByID(id string, v url.Values, options ...QueueOption
 			// we are done! break the loop and close the channels
 			break
 		}
-		// make sure to close the requestsChannel
-		close(queue.requestsChannel)
 	})(queue, data, errors, request)
 
 	// return the data channel
