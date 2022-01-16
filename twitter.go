@@ -107,10 +107,10 @@ func (api *Twitter) VerifyCredentials() (bool, *APIError) {
 }
 
 // parseResponse returns an error while unmarshaling response body to the results interface.
-func parseResponse(resp *http.Response, results *Data) *APIError {
+func (api *Twitter) parseResponse(resp *http.Response, results *Data) *APIError {
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
 
+	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return &APIError{0, err.Error()}
 	}
@@ -119,14 +119,26 @@ func parseResponse(resp *http.Response, results *Data) *APIError {
 	if err != nil {
 		return &APIError{0, err.Error()}
 	}
+
 	return nil
+}
+
+// parseResponseWithInterface
+func (api *Twitter) parseResponseWithInterface(resp *http.Response) ([]byte, *APIError) {
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, &APIError{0, err.Error()}
+	}
+
+	return body, nil
 }
 
 // apiDo send's the request to Twitter API and returns an error.
 // The results are processed by `parseResponse` and written to the temporary
 // `req.Results` interaface.
 func (api *Twitter) apiDo(req *Request) *APIError {
-	// fmt.Println(req.Req.URL.String())
 	resp, err := api.client.Do(req.Req)
 	if err != nil {
 		return &APIError{0, err.Error()}
@@ -138,14 +150,13 @@ func (api *Twitter) apiDo(req *Request) *APIError {
 		return &APIError{resp.StatusCode, resp.Status}
 	}
 
-	return parseResponse(resp, &req.Results)
+	return api.parseResponse(resp, &req.Results)
 }
 
-// apiDoRest send's the request to Twitter API and returns an error.
+// apiDoWithResponse send's the request to Twitter API and returns an error.
 // The results are processed by `parseResponse` and written to the temporary
 // `req.Results` interaface.
-func (api *Twitter) apiDoRest(req *Request) (*http.Response, *APIError) {
-	// fmt.Println(req.Req.URL.String())
+func (api *Twitter) apiDoWithResponse(req *Request) ([]byte, *APIError) {
 	resp, err := api.client.Do(req.Req)
 	if err != nil {
 		return nil, &APIError{0, err.Error()}
@@ -153,9 +164,9 @@ func (api *Twitter) apiDoRest(req *Request) (*http.Response, *APIError) {
 
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
+	if resp.StatusCode >= 400 {
 		return nil, &APIError{resp.StatusCode, resp.Status}
 	}
 
-	return resp, nil
+	return api.parseResponseWithInterface(resp)
 }

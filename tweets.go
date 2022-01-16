@@ -18,7 +18,7 @@ func (api *Twitter) GetUserMentions(id string, v url.Values, options ...QueueOpt
 	data := make(chan *Data)
 	errors := make(chan *APIError)
 	// create the request object
-	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/%s/mentions", api.baseURL, id), v)
+	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/%s/mentions", api.baseURL, id), v, nil)
 	// start the requests channel processor
 	go queue.processRequests(api)
 	// add the 1st request to the channel
@@ -86,7 +86,7 @@ func (api *Twitter) GetUserTweets(id string, v url.Values, options ...QueueOptio
 	data := make(chan *Data)
 	errors := make(chan *APIError)
 	// create the request object
-	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/%s/tweets", api.baseURL, id), v)
+	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/%s/tweets", api.baseURL, id), v, nil)
 	// start the requests channel processor
 	go queue.processRequests(api)
 	// add the 1st request to the channel
@@ -154,7 +154,7 @@ func (api *Twitter) GetTweets(v url.Values, options ...QueueOption) (chan *Data,
 	data := make(chan *Data)
 	errors := make(chan *APIError)
 	// create the request object
-	request, _ := NewRquest("GET", fmt.Sprintf("%s/tweets", api.baseURL), v)
+	request, _ := NewRquest("GET", fmt.Sprintf("%s/tweets", api.baseURL), v, nil)
 	// start the requests channel processor
 	go queue.processRequests(api)
 	// add the 1st request to the channel
@@ -222,7 +222,7 @@ func (api *Twitter) GetTweetByID(id string, v url.Values, options ...QueueOption
 	data := make(chan *Data)
 	errors := make(chan *APIError)
 	// create the request object
-	request, _ := NewRquest("GET", fmt.Sprintf("%s/tweets/%s", api.baseURL, id), v)
+	request, _ := NewRquest("GET", fmt.Sprintf("%s/tweets/%s", api.baseURL, id), v, nil)
 	// start the requests channel processor
 	go queue.processRequests(api)
 	// add the 1st request to the channel

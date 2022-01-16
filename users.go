@@ -18,7 +18,7 @@ func (api *Twitter) GetUserFollowers(id string, v url.Values, options ...QueueOp
 	data := make(chan *Data)
 	errors := make(chan *APIError)
 	// create the request object
-	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/%s/followers", api.baseURL, id), v)
+	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/%s/followers", api.baseURL, id), v, nil)
 	// start the requests channel processor
 	go queue.processRequests(api)
 	// add the 1st request to the channel
@@ -87,7 +87,7 @@ func (api *Twitter) GetUserFollowing(id string, v url.Values, options ...QueueOp
 	data := make(chan *Data)
 	errors := make(chan *APIError)
 	// create the request object
-	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/%s/following", api.baseURL, id), v)
+	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/%s/following", api.baseURL, id), v, nil)
 	// start the requests channel processor
 	go queue.processRequests(api)
 	// add the 1st request to the channel
@@ -156,7 +156,7 @@ func (api *Twitter) GetUsers(v url.Values, options ...QueueOption) (chan *Data, 
 	data := make(chan *Data)
 	errors := make(chan *APIError)
 	// create the request object
-	request, _ := NewRquest("GET", fmt.Sprintf("%s/users", api.baseURL), v)
+	request, _ := NewRquest("GET", fmt.Sprintf("%s/users", api.baseURL), v, nil)
 	// start the requests channel processor
 	go queue.processRequests(api)
 	// add the 1st request to the channel
@@ -206,7 +206,7 @@ func (api *Twitter) GetUsersBy(v url.Values, options ...QueueOption) (chan *Data
 	data := make(chan *Data)
 	errors := make(chan *APIError)
 	// create the request object
-	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/by", api.baseURL), v)
+	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/by", api.baseURL), v, nil)
 	// start the requests channel processor
 	go queue.processRequests(api)
 	// add the 1st request to the channel
@@ -256,7 +256,7 @@ func (api *Twitter) GetUserByID(id string, v url.Values, options ...QueueOption)
 	data := make(chan *Data)
 	errors := make(chan *APIError)
 	// create the request object
-	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/%s", api.baseURL, id), v)
+	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/%s", api.baseURL, id), v, nil)
 	// start the requests channel processor
 	go queue.processRequests(api)
 	// add the 1st request to the channel
@@ -307,7 +307,7 @@ func (api *Twitter) GetUsersByUserName(username string, v url.Values, options ..
 	data := make(chan *Data)
 	errors := make(chan *APIError)
 	// create the request object
-	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/by/username/%s", api.baseURL, username), v)
+	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/by/username/%s", api.baseURL, username), v, nil)
 	// start the requests channel processor
 	go queue.processRequests(api)
 	// add the 1st request to the channel

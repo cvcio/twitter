@@ -7,4 +7,4 @@ test-channels:
 	godotenv -f ./.env go test -timeout 120s -run Test_GetUserFollowers_Error
 
 test-stream:
-	godotenv -f ./.env go test -timeout 120s -run Test_PostFilterStreamRules
+	godotenv -f ./.env go test -timeout 120s -run Test_GetFilterStream

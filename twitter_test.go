@@ -86,7 +86,7 @@ func Test_GetUserFollowers(t *testing.T) {
 		if r != nil {
 			b, err := json.Marshal(r.Data)
 			if err != nil {
-				t.Errorf("json Marshar Error: %v", err)
+				t.Errorf("json Marshal Error: %v", err)
 			}
 
 			json.Unmarshal(b, &data)
@@ -158,7 +158,7 @@ func Test_Channels(t *testing.T) {
 			var d []*twitter.User
 			b, err := json.Marshal(r.Data)
 			if err != nil {
-				t.Fatalf("json Marshar Error: %v", err)
+				t.Fatalf("json Marshal Error: %v", err)
 			}
 
 			json.Unmarshal(b, &d)
@@ -201,7 +201,7 @@ func Test_GetUserFollowing(t *testing.T) {
 
 		b, err := json.Marshal(r.Data)
 		if err != nil {
-			t.Fatalf("json Marshar Error: %v", err)
+			t.Fatalf("json Marshal Error: %v", err)
 		}
 
 		json.Unmarshal(b, &data)
@@ -231,7 +231,7 @@ func Test_GetUsers(t *testing.T) {
 
 		b, err := json.Marshal(r.Data)
 		if err != nil {
-			t.Fatalf("json Marshar Error: %v", err)
+			t.Fatalf("json Marshal Error: %v", err)
 		}
 
 		json.Unmarshal(b, &data)
@@ -261,7 +261,7 @@ func Test_GetUsersBy(t *testing.T) {
 
 		b, err := json.Marshal(r.Data)
 		if err != nil {
-			t.Fatalf("json Marshar Error: %v", err)
+			t.Fatalf("json Marshal Error: %v", err)
 		}
 
 		json.Unmarshal(b, &data)
@@ -290,7 +290,7 @@ func Test_GetUserByID(t *testing.T) {
 
 		b, err := json.Marshal(r.Data)
 		if err != nil {
-			t.Fatalf("json Marshar Error: %v", err)
+			t.Fatalf("json Marshal Error: %v", err)
 		}
 
 		json.Unmarshal(b, &data)
@@ -319,7 +319,7 @@ func Test_GetUsersByUserName(t *testing.T) {
 
 		b, err := json.Marshal(r.Data)
 		if err != nil {
-			t.Fatalf("json Marshar Error: %v", err)
+			t.Fatalf("json Marshal Error: %v", err)
 		}
 
 		json.Unmarshal(b, &data)
@@ -349,7 +349,7 @@ func Test_GetUserTweets(t *testing.T) {
 
 		b, err := json.Marshal(r.Data)
 		if err != nil {
-			t.Fatalf("json Marshar Error: %v", err)
+			t.Fatalf("json Marshal Error: %v", err)
 		}
 
 		json.Unmarshal(b, &data)
@@ -379,7 +379,7 @@ func Test_GetUsesMentions(t *testing.T) {
 
 		b, err := json.Marshal(r.Data)
 		if err != nil {
-			t.Fatalf("json Marshar Error: %v", err)
+			t.Fatalf("json Marshal Error: %v", err)
 		}
 
 		json.Unmarshal(b, &data)
@@ -409,7 +409,7 @@ func Test_GetTweets(t *testing.T) {
 
 		b, err := json.Marshal(r.Data)
 		if err != nil {
-			t.Fatalf("json Marshar Error: %v", err)
+			t.Fatalf("json Marshal Error: %v", err)
 		}
 
 		json.Unmarshal(b, &data)
@@ -442,7 +442,7 @@ func Test_GetTweetByID(t *testing.T) {
 
 		b, err := json.Marshal(r.Data)
 		if err != nil {
-			t.Fatalf("json Marshar Error: %v", err)
+			t.Fatalf("json Marshal Error: %v", err)
 		}
 
 		json.Unmarshal(b, &data)
@@ -473,7 +473,7 @@ func Test_GetTweetsSearchRecent(t *testing.T) {
 
 		b, err := json.Marshal(r.Data)
 		if err != nil {
-			t.Fatalf("json Marshar Error: %v", err)
+			t.Fatalf("json Marshal Error: %v", err)
 		}
 
 		json.Unmarshal(b, &data)
@@ -484,37 +484,121 @@ func Test_GetTweetsSearchRecent(t *testing.T) {
 	}
 }
 
-// func Test_PostFilterStreamRules(t *testing.T) {
-// 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
-// 	if err != nil {
-// 		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
-// 	}
+func Test_PostFilterStreamRules(t *testing.T) {
+	api, _ := twitter.NewTwitter(consumerKey, consumerSecret)
 
-// 	v := url.Values{}
-// 	// v.Add("backfill_minutes", "10")
-// 	res, err := api.PostFilterStreamRules(v)
-// 	if err != nil {
-// 		t.Fatalf("json Marshar Error: %v", err)
-// 	}
-// 	defer res.Body.Close()
-// 	body, _ := ioutil.ReadAll(res.Body)
+	rules := new(twitter.Rules)
+	rules.Add = append(rules.Add, &twitter.RulesData{
+		Value: "greece",
+		Tag:   "test-client",
+	})
+	v := url.Values{}
+	jsonValue, _ := json.Marshal(rules)
+	res, err := api.PostFilterStreamRules(v, jsonValue)
+	if err != nil {
+		t.Fatalf("Twitter API PostFilterStreamRules Error: %s", err.Message)
+	}
 
-// 	fmt.Printf("%v %v\n", res, body)
-// }
+	if len(res.Data) != 1 {
+		t.Fatalf("Twitter API PostFilterStreamRules Error. Should have returned 1, got %d", len(res.Data))
+	}
 
-// func Test_GetFilterStream(t *testing.T) {
-// 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
-// 	if err != nil {
-// 		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
-// 	}
+	if len(res.Errors) != 0 {
+		t.Fatalf("Twitter API PostFilterStreamRules Error. Should have returned 0 error message, got %d", len(res.Errors))
+	}
 
-// 	v := url.Values{}
-// 	// v.Add("backfill_minutes", "10")
-// 	res, err := api.PostFilterStreamRules(v)
-// 	fmt.Printf("%v %v\n", res, err)
+}
 
-// 	s := api.GetFilterStream(v)
-// 	for t := range s.C {
-// 		fmt.Printf("%v", t)
-// 	}
-// }
+func Test_GetFilterStreamRules(t *testing.T) {
+	api, _ := twitter.NewTwitter(consumerKey, consumerSecret)
+	_, err := api.GetFilterStreamRules(nil)
+	if err != nil {
+		t.Fatalf("Twitter API GetFilterStreamRules Error: %s", err.Message)
+	}
+}
+
+func Test_GetFilterStream(t *testing.T) {
+	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
+	if err != nil {
+		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+	}
+
+	v := url.Values{}
+	v.Add("user.fields", "created_at,description,id,location,name,pinned_tweet_id,profile_image_url,protected,public_metrics,url,username,verified")
+	v.Add("expansions", "author_id,in_reply_to_user_id")
+	v.Add("tweet.fields", "created_at,id,lang,source,public_metrics")
+
+	var f twitter.StreamData
+	s, serr := api.GetFilterStream(v)
+	if serr != nil {
+		t.Fatalf("Twitter API GetSampleStream Error: %s", serr.Message)
+	}
+	for t := range s.C {
+		f, _ = t.(twitter.StreamData)
+		break
+	}
+	s.Stop()
+
+	if f.Tweet.ID == "" {
+		t.Fatalf("Twitter API GetSampleStream Error. Should have return a valid tweet struct, got %v", f.Tweet)
+	}
+}
+
+func Test_GetSampleStream(t *testing.T) {
+	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
+	if err != nil {
+		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+	}
+
+	v := url.Values{}
+	v.Add("user.fields", "created_at,description,id,location,name,pinned_tweet_id,profile_image_url,protected,public_metrics,url,username,verified")
+	v.Add("expansions", "author_id,in_reply_to_user_id")
+	v.Add("tweet.fields", "created_at,id,lang,source,public_metrics")
+
+	var f twitter.StreamData
+	s, serr := api.GetSampleStream(v)
+	if serr != nil {
+		t.Fatalf("Twitter API GetSampleStream Error: %s", serr.Message)
+	}
+	for t := range s.C {
+		f, _ = t.(twitter.StreamData)
+		break
+	}
+	s.Stop()
+
+	if f.Tweet.ID == "" {
+		t.Fatalf("Twitter API GetSampleStream Error. Should have return a valid tweet struct, got %v", f.Tweet)
+	}
+}
+
+func Test_DeleteFilterStreamRules(t *testing.T) {
+	api, _ := twitter.NewTwitter(consumerKey, consumerSecret)
+
+	rulesToDelete, err := api.GetFilterStreamRules(nil)
+	if err != nil {
+		t.Fatalf("Twitter API GetFilterStreamRules Error: %s", err.Message)
+	}
+	var ids []string
+	for _, v := range rulesToDelete.Data {
+		ids = append(ids, v.ID)
+	}
+	rules := new(twitter.Rules)
+	rules.Delete = &twitter.RulesDelete{
+		Ids: ids,
+	}
+
+	jsonValue, _ := json.Marshal(rules)
+	res, err := api.PostFilterStreamRules(nil, jsonValue)
+
+	if err != nil {
+		t.Fatalf("Twitter API PostFilterStreamRules Error: %s", err.Message)
+	}
+
+	if res.Meta.Summary.Deleted != 1 {
+		t.Fatalf("Twitter API PostFilterStreamRules Error. Should have returned 1, got %d", res.Meta.Summary.Deleted)
+	}
+
+	if len(res.Errors) > 0 {
+		t.Fatalf("Twitter API PostFilterStreamRules Error. Should have returned 0 error message, got %d", len(res.Errors))
+	}
+}

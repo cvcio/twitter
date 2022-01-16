@@ -1,4 +1,5 @@
 [![Language](https://img.shields.io/badge/Language-Go-blue.svg)](https://golang.org/)
+[![Build Status](https://github.com/cvcio/twitter/workflows/Go/badge.svg)](https://github.com/cvcio/twitter/actions)
 [![GoDoc](https://pkg.go.dev/badge/github.com/cvcio/twitter)](https://pkg.go.dev/github.com/cvcio/twitter)
 [![Go Report Card](https://goreportcard.com/badge/github.com/cvcio/twitter)](https://goreportcard.com/report/github.com/cvcio/twitter)
 
@@ -27,12 +28,12 @@ go get github.com/cvcio/twitter
 | `GetUserMentions` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 450/15m (app), 180/15m (user) | [Get User Mentions](https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-mentions) |
 | `GetTweets` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Tweets](https://developer.twitter.com/en/docs/twitter-api/tweets/lookup/api-reference/get-tweets) |
 | `GetTweetByID` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Tweets By Id](https://developer.twitter.com/en/docs/twitter-api/tweets/lookup/api-reference/get-tweets-id) |
-| `GetFilterStream` | Not Yet | OAuth 2.0 Bearer Token | 50/15m (app) | [Filter Stream](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference/get-tweets-search-stream) |
-| `GetFilterStreamRules` | Not Yet | OAuth 2.0 Bearer Token | 450/15m (app) | [Get Filter Stream Rules](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference/get-tweets-search-stream-rules)
-| `PostFilterStreamRules` | Not Yet | OAuth 2.0 Bearer Token | 450/15m (app) | [Post Filter Stream Rules](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference/post-tweets-search-stream-rules)
-| `GetSampleStream` | Not Yet | OAuth 2.0 Bearer Token | 50/15m (app) | [Sample Stream](https://developer.twitter.com/en/docs/twitter-api/tweets/sampled-stream/api-reference/get-tweets-sample-stream)
+| `GetFilterStream` | Yes | OAuth 2.0 Bearer Token | 50/15m (app) | [Filter Stream](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference/get-tweets-search-stream) |
+| `GetFilterStreamRules` | Yes | OAuth 2.0 Bearer Token | 450/15m (app) | [Get Filter Stream Rules](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference/get-tweets-search-stream-rules)
+| `PostFilterStreamRules` | Yes | OAuth 2.0 Bearer Token | 450/15m (app) | [Post Filter Stream Rules](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference/post-tweets-search-stream-rules)
+| `GetSampleStream` | Yes | OAuth 2.0 Bearer Token | 50/15m (app) | [Sample Stream](https://developer.twitter.com/en/docs/twitter-api/tweets/sampled-stream/api-reference/get-tweets-sample-stream)
 | `GetTweetsSearchRecent` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 450/15m (app), 180/15m (user) | [Sample Stream](https://developer.twitter.com/en/docs/twitter-api/tweets/search/api-reference/get-tweets-search-recent)
-| `GetTweetsSearchAll` | Private Beta | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 1/1s (user) | [Sample Stream](https://developer.twitter.com/en/docs/twitter-api/tweets/full-archive-search/api-reference/get-tweets-search-all)
+| `GetTweetsSearchAll` | - | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 1/1s (user) | [Search Tweets](https://developer.twitter.com/en/docs/twitter-api/tweets/full-archive-search/api-reference/get-tweets-search-all)
 
 ### Usage
 
@@ -130,6 +131,34 @@ Auto paginate results (if available) when `pagination_token` is present in the r
 ```go
 twitter.WithAuto(Bool)
 ```
+
+#### Streaming
+
+```go
+api, _ := twitter.NewTwitter(*consumerKey, *consumerSecret,)
+rules := new(twitter.Rules)
+rules.Add = append(rules.Add, &twitter.RulesData{
+	Value: "greece",
+	Tag:   "test-client",
+})
+
+jsonValue, _ := json.Marshal(rules)
+res, _ := api.PostFilterStreamRules(nil, jsonValue)
+
+v := url.Values{}
+v.Add("user.fields", "created_at,description,id,location,name,pinned_tweet_id,profile_image_url,protected,public_metrics,url,username,verified")
+v.Add("expansions", "author_id,in_reply_to_user_id")
+v.Add("tweet.fields", "created_at,id,lang,source,public_metrics")
+
+s, _ := api.GetFilterStream(v)
+for t := range s.C {
+	f, _ := t.(twitter.StreamData)
+	fmt.Println(f.Tweet)
+	break
+}
+s.Stop()
+```
+
 
 ### Examples
 

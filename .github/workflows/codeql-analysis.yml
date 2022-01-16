@@ -1,0 +1,18 @@
+name: "CodeQL"
+on:
+  push:
+    branches: [ main ]
+jobs:
+  analyze:
+    if: github.event_name == 'push' && contains(toJson(github.event.commits), '***NO_CI***') == false && contains(toJson(github.event.commits), '[ci skip]') == false && contains(toJson(github.event.commits), '[skip ci]') == false
+    name: Analyze
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: go
+    - name: CodeQL Analysis
+      uses: github/codeql-action/analyze@v1

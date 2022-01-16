@@ -18,7 +18,7 @@ func (api *Twitter) GetTweetsSearchRecent(v url.Values, options ...QueueOption) 
 	data := make(chan *Data)
 	errors := make(chan *APIError)
 	// create the request object
-	request, _ := NewRquest("GET", fmt.Sprintf("%s/tweets/search/recent", api.baseURL), v)
+	request, _ := NewRquest("GET", fmt.Sprintf("%s/tweets/search/recent", api.baseURL), v, nil)
 	// start the requests channel processor
 	go queue.processRequests(api)
 	// add the 1st request to the channel
@@ -72,7 +72,7 @@ func (api *Twitter) GetTweetsSearchAll(v url.Values, options ...QueueOption) (ch
 	data := make(chan *Data)
 	errors := make(chan *APIError)
 	// create the request object
-	request, _ := NewRquest("GET", fmt.Sprintf("%s/tweets/search/all", api.baseURL), v)
+	request, _ := NewRquest("GET", fmt.Sprintf("%s/tweets/search/all", api.baseURL), v, nil)
 	// start the requests channel processor
 	go queue.processRequests(api)
 	// add the 1st request to the channel
