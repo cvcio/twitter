@@ -129,7 +129,11 @@ func (api *Twitter) GetFilterStreamRules(v url.Values) (*Rules, *APIError) {
 // Official Documentation: https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference/post-tweets-search-stream-rules
 // Authentication Methods: OAuth 2.0 Bearer Token
 // Rate Limit: 450/15m (app)
-func (api *Twitter) PostFilterStreamRules(v url.Values, body []byte) (*Rules, *APIError) {
+func (api *Twitter) PostFilterStreamRules(v url.Values, r *Rules) (*Rules, *APIError) {
+	body, e := json.Marshal(r)
+	if e != nil {
+		return nil, &APIError{0, e.Error()}
+	}
 	request, _ := NewRquest("POST", fmt.Sprintf("%s/tweets/search/stream/rules", api.baseURL), v, body)
 
 	res, err := api.apiDoWithResponse(request)
