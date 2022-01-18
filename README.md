@@ -142,8 +142,7 @@ rules.Add = append(rules.Add, &twitter.RulesData{
 	Tag:   "test-client",
 })
 
-jsonValue, _ := json.Marshal(rules)
-res, _ := api.PostFilterStreamRules(nil, jsonValue)
+res, _ := api.PostFilterStreamRules(nil, rules)
 
 v := url.Values{}
 v.Add("user.fields", "created_at,description,id,location,name,pinned_tweet_id,profile_image_url,protected,public_metrics,url,username,verified")

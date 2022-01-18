@@ -493,8 +493,7 @@ func Test_PostFilterStreamRules(t *testing.T) {
 		Tag:   "test-client",
 	})
 	v := url.Values{}
-	jsonValue, _ := json.Marshal(rules)
-	res, err := api.PostFilterStreamRules(v, jsonValue)
+	res, err := api.PostFilterStreamRules(v, rules)
 	if err != nil {
 		t.Fatalf("Twitter API PostFilterStreamRules Error: %s", err.Message)
 	}
@@ -587,8 +586,7 @@ func Test_DeleteFilterStreamRules(t *testing.T) {
 		Ids: ids,
 	}
 
-	jsonValue, _ := json.Marshal(rules)
-	res, err := api.PostFilterStreamRules(nil, jsonValue)
+	res, err := api.PostFilterStreamRules(nil, rules)
 
 	if err != nil {
 		t.Fatalf("Twitter API PostFilterStreamRules Error: %s", err.Message)

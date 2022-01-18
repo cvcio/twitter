@@ -164,7 +164,7 @@ type Tweet struct {
 	NonPublicMetrics   *TweetMetrics        `json:"non_public_metrics,omitempty"`
 	OrganicMetrics     *TweetMetrics        `json:"organic_metrics,omitempty"`
 	PromotedMetrics    *TweetMetrics        `json:"promoted_metrics,omitempty"`
-	PossibySensitive   bool                 `json:"possiby_sensitive,omitempty"`
+	PossibySensitive   bool                 `json:"possibly_sensitive,omitempty"`
 	Lang               string               `json:"lang,omitempty"`
 	ReplySettings      string               `json:"reply_settings,omitempty"`
 	Source             string               `json:"source,omitempty"`

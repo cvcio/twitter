@@ -58,7 +58,7 @@ func NewTwitter(consumerKey, consumerSecret string) (*Twitter, *APIError) {
 }
 
 // NewTwitterWithContext returns a new Twitter API v2 Client using OAuth 1.0 based authentication.
-// This method is usefull when you need to make API requests, on behalf of a Twitter account.
+// This method is useful when you need to make API requests, on behalf of a Twitter account.
 // Official Documentation: https://developer.twitter.com/en/docs/authentication/oauth-1-0a
 func NewTwitterWithContext(consumerKey, consumerSecret, accessToken, accessTokenSecret string) (*Twitter, *APIError) {
 	// init new Twitter client

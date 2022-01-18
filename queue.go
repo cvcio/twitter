@@ -5,10 +5,10 @@ import (
 )
 
 // Queue struct holds information for each method, such as
-// 	@rate time.Duration specific for each endpoint on Twitter
-// 	@delay time.Duration fallback for @rate, specific for each endpoint on Twitter
-// 	@requestsChannel chan *Request the incoming (requests) channel
-// 	@responseChannel chan *Response the outgoing (response) channel
+// @rate time.Duration specific for each endpoint on Twitter
+// @delay time.Duration fallback for @rate, specific for each endpoint on Twitter
+// @requestsChannel chan *Request the incoming (requests) channel
+// @responseChannel chan *Response the outgoing (response) channel
 type Queue struct {
 	rate            time.Duration
 	delay           time.Duration
@@ -18,7 +18,7 @@ type Queue struct {
 	responseChannel chan *Response
 }
 
-// QueueOption queue options
+// QueueOption queue options struct
 type QueueOption func(*Queue)
 
 // WithRate (default: according to endpoint) adjusts the the duration between each request to avoid
