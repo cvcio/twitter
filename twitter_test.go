@@ -213,7 +213,7 @@ func Test_GetUserFollowing(t *testing.T) {
 }
 
 func Test_GetUsers(t *testing.T) {
-	api, err := twitter.NewTwitterWithContext(consumerKey, consumerSecret, accessToken, accessTokenSecret)
+	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
 		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
 	}
@@ -243,7 +243,7 @@ func Test_GetUsers(t *testing.T) {
 }
 
 func Test_GetUsersBy(t *testing.T) {
-	api, err := twitter.NewTwitterWithContext(consumerKey, consumerSecret, accessToken, accessTokenSecret)
+	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
 		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
 	}
@@ -273,7 +273,7 @@ func Test_GetUsersBy(t *testing.T) {
 }
 
 func Test_GetUserByID(t *testing.T) {
-	api, err := twitter.NewTwitterWithContext(consumerKey, consumerSecret, accessToken, accessTokenSecret)
+	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
 		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
 	}
@@ -302,7 +302,7 @@ func Test_GetUserByID(t *testing.T) {
 }
 
 func Test_GetUsersByUserName(t *testing.T) {
-	api, err := twitter.NewTwitterWithContext(consumerKey, consumerSecret, accessToken, accessTokenSecret)
+	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
 		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
 	}
