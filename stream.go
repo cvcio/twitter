@@ -19,37 +19,22 @@ func (stream *Stream) Stop() {
 	stream.run = false
 }
 
-func (stream *Stream) start(urlStr string, v url.Values) *APIError {
+func (stream *Stream) start(urlStr string, v url.Values) error {
 	stream.run = true
 
 	request, err := NewRquest("GET", urlStr, v, nil)
 	if err != nil {
-		return &APIError{0, err.Error()}
+		return err
 	}
 	r, err := stream.api.client.Do(request.Req)
 	if err != nil {
-		return &APIError{0, err.Error()}
+		return err
 	}
 
 	go stream.listen(r)
 
 	return nil
 }
-
-// func (stream *Stream) loop(urlStr string, v url.Values) {
-// 	defer close(stream.C)
-// 	for stream.run {
-// 		request, err := NewRquest("GET", urlStr, v, nil)
-// 		if err != nil {
-// 			panic(err)
-// 		}
-// 		r, err := stream.api.client.Do(request.Req)
-// 		if err != nil {
-// 			panic(err)
-// 		}
-// 		stream.listen(r)
-// 	}
-// }
 
 func jsonToKnownType(j []byte) interface{} {
 	var tweet StreamData
@@ -78,7 +63,7 @@ func (stream *Stream) listen(response *http.Response) {
 	}
 }
 
-func (api Twitter) newStream(urlStr string, v url.Values) (*Stream, *APIError) {
+func (api Twitter) newStream(urlStr string, v url.Values) (*Stream, error) {
 	stream := Stream{
 		api: &api,
 		C:   make(chan interface{}),
@@ -96,7 +81,7 @@ func (api Twitter) newStream(urlStr string, v url.Values) (*Stream, *APIError) {
 // Official Documentation: https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference/get-tweets-search-stream
 // Authentication Methods: OAuth 2.0 Bearer Token
 // Rate Limit: 50/15m (app)
-func (api *Twitter) GetFilterStream(v url.Values) (*Stream, *APIError) {
+func (api *Twitter) GetFilterStream(v url.Values) (*Stream, error) {
 	return api.newStream(
 		fmt.Sprintf("%s/tweets/search/stream", api.baseURL), v,
 	)
@@ -107,7 +92,7 @@ func (api *Twitter) GetFilterStream(v url.Values) (*Stream, *APIError) {
 // Official Documentation: https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference/get-tweets-search-stream-rules
 // Authentication Methods: OAuth 2.0 Bearer Token
 // Rate Limit: 450/15m (app)
-func (api *Twitter) GetFilterStreamRules(v url.Values) (*Rules, *APIError) {
+func (api *Twitter) GetFilterStreamRules(v url.Values) (*Rules, error) {
 	request, _ := NewRquest("GET", fmt.Sprintf("%s/tweets/search/stream/rules", api.baseURL), v, nil)
 
 	res, err := api.apiDoWithResponse(request)
@@ -118,7 +103,7 @@ func (api *Twitter) GetFilterStreamRules(v url.Values) (*Rules, *APIError) {
 	rules := new(Rules)
 
 	if err := json.Unmarshal(res, &rules); err != nil {
-		return nil, &APIError{0, err.Error()}
+		return nil, err
 	}
 
 	return rules, nil
@@ -129,10 +114,10 @@ func (api *Twitter) GetFilterStreamRules(v url.Values) (*Rules, *APIError) {
 // Official Documentation: https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference/post-tweets-search-stream-rules
 // Authentication Methods: OAuth 2.0 Bearer Token
 // Rate Limit: 450/15m (app)
-func (api *Twitter) PostFilterStreamRules(v url.Values, r *Rules) (*Rules, *APIError) {
-	body, e := json.Marshal(r)
-	if e != nil {
-		return nil, &APIError{0, e.Error()}
+func (api *Twitter) PostFilterStreamRules(v url.Values, r *Rules) (*Rules, error) {
+	body, err := json.Marshal(r)
+	if err != nil {
+		return nil, err
 	}
 	request, _ := NewRquest("POST", fmt.Sprintf("%s/tweets/search/stream/rules", api.baseURL), v, body)
 
@@ -144,7 +129,7 @@ func (api *Twitter) PostFilterStreamRules(v url.Values, r *Rules) (*Rules, *APIE
 	rules := new(Rules)
 
 	if err := json.Unmarshal(res, &rules); err != nil {
-		return nil, &APIError{0, err.Error()}
+		return nil, err
 	}
 
 	return rules, nil
@@ -155,7 +140,7 @@ func (api *Twitter) PostFilterStreamRules(v url.Values, r *Rules) (*Rules, *APIE
 // Official Documentation: https://developer.twitter.com/en/docs/twitter-api/tweets/sampled-stream/api-reference/get-tweets-sample-stream
 // Authentication Methods: OAuth 2.0 Bearer Token
 // Rate Limit: 50/15m (app)
-func (api *Twitter) GetSampleStream(v url.Values) (*Stream, *APIError) {
+func (api *Twitter) GetSampleStream(v url.Values) (*Stream, error) {
 	return api.newStream(
 		fmt.Sprintf("%s/tweets/sample/stream", api.baseURL), v,
 	)

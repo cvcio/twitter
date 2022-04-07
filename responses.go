@@ -7,7 +7,7 @@ import (
 // Response Struct
 type Response struct {
 	Results Data
-	Error   *APIError
+	Error   error
 }
 
 // Meta Struct

@@ -3,6 +3,8 @@ package twitter
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -32,7 +34,7 @@ type Twitter struct {
 // NewTwitter returns a new Twitter API v2 Client using OAuth 2.0 based authentication.
 // This method is usufull when you only need to make Application-Only requests.
 // Official Documentation: https://developer.twitter.com/en/docs/authentication/oauth-2-0
-func NewTwitter(consumerKey, consumerSecret string) (*Twitter, *APIError) {
+func NewTwitter(consumerKey, consumerSecret string) (*Twitter, error) {
 	// create new context
 	ctx := context.Background()
 
@@ -60,7 +62,7 @@ func NewTwitter(consumerKey, consumerSecret string) (*Twitter, *APIError) {
 // NewTwitterWithContext returns a new Twitter API v2 Client using OAuth 1.0 based authentication.
 // This method is useful when you need to make API requests, on behalf of a Twitter account.
 // Official Documentation: https://developer.twitter.com/en/docs/authentication/oauth-1-0a
-func NewTwitterWithContext(consumerKey, consumerSecret, accessToken, accessTokenSecret string) (*Twitter, *APIError) {
+func NewTwitterWithContext(consumerKey, consumerSecret, accessToken, accessTokenSecret string) (*Twitter, error) {
 	// init new Twitter client
 	api := &Twitter{
 		baseURL: BaseURL,
@@ -82,7 +84,7 @@ func NewTwitterWithContext(consumerKey, consumerSecret, accessToken, accessToken
 	// Use the custom HTTP client with tokens
 	httpClient, err := oauthConsumer.MakeHttpClient(&oauthToken)
 	if err != nil {
-		return nil, &APIError{0, err.Error()}
+		return nil, err
 	}
 
 	// http.Client will automatically authorize Requests
@@ -97,39 +99,39 @@ func (api *Twitter) GetClient() *http.Client {
 
 // VerifyCredentials returns bool upon successful request. This method will make a request
 // on the rate-limit endpoint since there is no official token validation method.
-func (api *Twitter) VerifyCredentials() (bool, *APIError) {
+func (api *Twitter) VerifyCredentials() (bool, error) {
 	response, err := api.client.Get(RateLimitStatusURL)
 	if err != nil {
-		return false, &APIError{0, err.Error()}
+		return false, err
 	}
 	defer response.Body.Close()
 	return err == nil, nil
 }
 
 // parseResponse returns an error while unmarshaling response body to the results interface.
-func (api *Twitter) parseResponse(resp *http.Response, results *Data) *APIError {
+func (api *Twitter) parseResponse(resp *http.Response, results *Data) error {
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return &APIError{0, err.Error()}
+		return err
 	}
 
 	err = json.Unmarshal(body, &results)
 	if err != nil {
-		return &APIError{0, err.Error()}
+		return err
 	}
 
 	return nil
 }
 
 // parseResponseWithInterface
-func (api *Twitter) parseResponseWithInterface(resp *http.Response) ([]byte, *APIError) {
+func (api *Twitter) parseResponseWithInterface(resp *http.Response) ([]byte, error) {
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return nil, &APIError{0, err.Error()}
+		return nil, err
 	}
 
 	return body, nil
@@ -138,16 +140,16 @@ func (api *Twitter) parseResponseWithInterface(resp *http.Response) ([]byte, *AP
 // apiDo send's the request to Twitter API and returns an error.
 // The results are processed by `parseResponse` and written to the temporary
 // `req.Results` interaface.
-func (api *Twitter) apiDo(req *Request) *APIError {
+func (api *Twitter) apiDo(req *Request) error {
 	resp, err := api.client.Do(req.Req)
 	if err != nil {
-		return &APIError{0, err.Error()}
+		return err
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return &APIError{resp.StatusCode, resp.Status}
+		return errors.New(fmt.Sprintf("%d - %s", resp.StatusCode, resp.Status))
 	}
 
 	return api.parseResponse(resp, &req.Results)
@@ -156,16 +158,16 @@ func (api *Twitter) apiDo(req *Request) *APIError {
 // apiDoWithResponse send's the request to Twitter API and returns an error.
 // The results are processed by `parseResponse` and written to the temporary
 // `req.Results` interaface.
-func (api *Twitter) apiDoWithResponse(req *Request) ([]byte, *APIError) {
+func (api *Twitter) apiDoWithResponse(req *Request) ([]byte, error) {
 	resp, err := api.client.Do(req.Req)
 	if err != nil {
-		return nil, &APIError{0, err.Error()}
+		return nil, err
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode >= 400 {
-		return nil, &APIError{resp.StatusCode, resp.Status}
+		return nil, errors.New(fmt.Sprintf("%d - %s", resp.StatusCode, resp.Status))
 	}
 
 	return api.parseResponseWithInterface(resp)

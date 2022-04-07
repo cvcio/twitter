@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/url"
 	"os"
+	"strings"
 	"testing"
 	"time"
 
@@ -43,7 +44,7 @@ func Test_NewTwitter_VerifyCredentials(t *testing.T) {
 	api, _ := twitter.NewTwitter(consumerKey, consumerSecret)
 	ok, err := api.VerifyCredentials()
 	if err != nil {
-		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Error())
 	}
 
 	if !ok {
@@ -55,7 +56,7 @@ func Test_NewTwitterWithContext_VerifyCredentials(t *testing.T) {
 	api, err := twitter.NewTwitterWithContext(consumerKey, consumerSecret, accessToken, accessTokenSecret)
 	ok, err := api.VerifyCredentials()
 	if err != nil {
-		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Error())
 	}
 
 	if !ok {
@@ -66,7 +67,7 @@ func Test_NewTwitterWithContext_VerifyCredentials(t *testing.T) {
 func Test_GetUserFollowers(t *testing.T) {
 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
-		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Error())
 	}
 	var data []*twitter.User
 
@@ -111,7 +112,7 @@ func Test_GetUserFollowers(t *testing.T) {
 func Test_GetUserFollowers_Error(t *testing.T) {
 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
-		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Error())
 	}
 
 	v := url.Values{}
@@ -129,8 +130,8 @@ func Test_GetUserFollowers_Error(t *testing.T) {
 			break
 		}
 
-		if e == nil || e.Code != 400 {
-			t.Fatalf("Should have returned 400: %v", e)
+		if e == nil || !strings.Contains(e.Error(), "400") {
+			t.Fatalf("Should have returned 400, got %s instead", e.Error())
 			break
 		}
 	}
@@ -139,7 +140,7 @@ func Test_GetUserFollowers_Error(t *testing.T) {
 func Test_Channels(t *testing.T) {
 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
-		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Error())
 	}
 
 	size := 0
@@ -186,7 +187,7 @@ func Test_Channels(t *testing.T) {
 func Test_GetUserFollowing(t *testing.T) {
 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
-		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Error())
 	}
 	var data []*twitter.User
 
@@ -215,7 +216,7 @@ func Test_GetUserFollowing(t *testing.T) {
 func Test_GetUsers(t *testing.T) {
 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
-		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Error())
 	}
 	var data []*twitter.User
 
@@ -245,7 +246,7 @@ func Test_GetUsers(t *testing.T) {
 func Test_GetUsersBy(t *testing.T) {
 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
-		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Error())
 	}
 	var data []*twitter.User
 
@@ -275,7 +276,7 @@ func Test_GetUsersBy(t *testing.T) {
 func Test_GetUserByID(t *testing.T) {
 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
-		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Error())
 	}
 	var data *twitter.User
 
@@ -304,7 +305,7 @@ func Test_GetUserByID(t *testing.T) {
 func Test_GetUsersByUserName(t *testing.T) {
 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
-		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Error())
 	}
 	var data *twitter.User
 
@@ -333,7 +334,7 @@ func Test_GetUsersByUserName(t *testing.T) {
 func Test_GetUserTweets(t *testing.T) {
 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
-		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Error())
 	}
 	var data []*twitter.Tweet
 
@@ -363,7 +364,7 @@ func Test_GetUserTweets(t *testing.T) {
 func Test_GetUsesMentions(t *testing.T) {
 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
-		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Error())
 	}
 	var data []*twitter.Tweet
 
@@ -393,7 +394,7 @@ func Test_GetUsesMentions(t *testing.T) {
 func Test_GetTweets(t *testing.T) {
 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
-		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Error())
 	}
 	var data []*twitter.Tweet
 
@@ -427,7 +428,7 @@ func Test_GetTweets(t *testing.T) {
 func Test_GetTweetByID(t *testing.T) {
 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
-		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Error())
 	}
 	var data *twitter.Tweet
 
@@ -456,7 +457,7 @@ func Test_GetTweetByID(t *testing.T) {
 func Test_GetTweetsSearchRecent(t *testing.T) {
 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
-		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Error())
 	}
 	var data []*twitter.Tweet
 
@@ -495,7 +496,7 @@ func Test_PostFilterStreamRules(t *testing.T) {
 	v := url.Values{}
 	res, err := api.PostFilterStreamRules(v, rules)
 	if err != nil {
-		t.Fatalf("Twitter API PostFilterStreamRules Error: %s", err.Message)
+		t.Fatalf("Twitter API PostFilterStreamRules Error: %s", err.Error())
 	}
 
 	if len(res.Data) != 1 {
@@ -503,7 +504,7 @@ func Test_PostFilterStreamRules(t *testing.T) {
 	}
 
 	if len(res.Errors) != 0 {
-		t.Fatalf("Twitter API PostFilterStreamRules Error. Should have returned 0 error message, got %d", len(res.Errors))
+		t.Fatalf("Twitter API PostFilterStreamRules Error. Should have returned 0 error Error(), got %d", len(res.Errors))
 	}
 
 }
@@ -512,14 +513,14 @@ func Test_GetFilterStreamRules(t *testing.T) {
 	api, _ := twitter.NewTwitter(consumerKey, consumerSecret)
 	_, err := api.GetFilterStreamRules(nil)
 	if err != nil {
-		t.Fatalf("Twitter API GetFilterStreamRules Error: %s", err.Message)
+		t.Fatalf("Twitter API GetFilterStreamRules Error: %s", err.Error())
 	}
 }
 
 func Test_GetFilterStream(t *testing.T) {
 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
-		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Error())
 	}
 
 	v := url.Values{}
@@ -530,7 +531,7 @@ func Test_GetFilterStream(t *testing.T) {
 	var f twitter.StreamData
 	s, serr := api.GetFilterStream(v)
 	if serr != nil {
-		t.Fatalf("Twitter API GetSampleStream Error: %s", serr.Message)
+		t.Fatalf("Twitter API GetSampleStream Error: %s", serr.Error())
 	}
 	for t := range s.C {
 		f, _ = t.(twitter.StreamData)
@@ -546,7 +547,7 @@ func Test_GetFilterStream(t *testing.T) {
 func Test_GetSampleStream(t *testing.T) {
 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
-		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Message)
+		t.Fatalf("Twitter API VerifyCredentials Error: %s", err.Error())
 	}
 
 	v := url.Values{}
@@ -557,7 +558,7 @@ func Test_GetSampleStream(t *testing.T) {
 	var f twitter.StreamData
 	s, serr := api.GetSampleStream(v)
 	if serr != nil {
-		t.Fatalf("Twitter API GetSampleStream Error: %s", serr.Message)
+		t.Fatalf("Twitter API GetSampleStream Error: %s", serr.Error())
 	}
 	for t := range s.C {
 		f, _ = t.(twitter.StreamData)
@@ -575,7 +576,7 @@ func Test_DeleteFilterStreamRules(t *testing.T) {
 
 	rulesToDelete, err := api.GetFilterStreamRules(nil)
 	if err != nil {
-		t.Fatalf("Twitter API GetFilterStreamRules Error: %s", err.Message)
+		t.Fatalf("Twitter API GetFilterStreamRules Error: %s", err.Error())
 	}
 	var ids []string
 	for _, v := range rulesToDelete.Data {
@@ -589,7 +590,7 @@ func Test_DeleteFilterStreamRules(t *testing.T) {
 	res, err := api.PostFilterStreamRules(nil, rules)
 
 	if err != nil {
-		t.Fatalf("Twitter API PostFilterStreamRules Error: %s", err.Message)
+		t.Fatalf("Twitter API PostFilterStreamRules Error: %s", err.Error())
 	}
 
 	if res.Meta.Summary.Deleted != 1 {
@@ -597,6 +598,6 @@ func Test_DeleteFilterStreamRules(t *testing.T) {
 	}
 
 	if len(res.Errors) > 0 {
-		t.Fatalf("Twitter API PostFilterStreamRules Error. Should have returned 0 error message, got %d", len(res.Errors))
+		t.Fatalf("Twitter API PostFilterStreamRules Error. Should have returned 0 error Error(), got %d", len(res.Errors))
 	}
 }

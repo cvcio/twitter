@@ -1,6 +1,8 @@
 package twitter
 
 import (
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -67,17 +69,13 @@ func (q *Queue) processRequests(api *Twitter) {
 		// capture input request and channel state
 		req := <-q.requestsChannel
 
-		// break the loop if the channel is closed
-		// if !ok {
-		// 	break
-		// }
-
 		// send the request on twitter api
 		err := api.apiDo(req)
 
 		// capture request errors
 		if err != nil && q.auto {
-			if err.Code == 420 || err.Code == 429 || err.Code >= 500 {
+			code := parseErrorCode(err)
+			if code == 420 || code == 429 || code >= 500 {
 				// if err == rate limit then add req to channel again and continue
 				go func(c *Queue, r *Request) {
 					c.requestsChannel <- r
@@ -100,6 +98,21 @@ func (q *Queue) processRequests(api *Twitter) {
 		// throttle requests to avoid rate-limit errors
 		<-time.After(q.rate)
 	}
+}
+
+func parseErrorCode(err error) int {
+	var code int
+
+	e := strings.Split(err.Error(), " - ")
+
+	if len(e) > 0 {
+		code, err := strconv.Atoi(e[0])
+		if err != nil {
+			return code
+		}
+	}
+
+	return code
 }
 
 // Close closes requests and response channels

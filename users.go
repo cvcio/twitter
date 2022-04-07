@@ -11,12 +11,12 @@ import (
 // Official Documentation: https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-followers
 // Authentication Methods: OAuth 1.0a User Context, OAuth 2.0 Bearer Token
 // Rate Limit: 15/15m (app), 15/15m (user)
-func (api *Twitter) GetUserFollowers(id string, v url.Values, options ...QueueOption) (chan *Data, chan *APIError) {
+func (api *Twitter) GetUserFollowers(id string, v url.Values, options ...QueueOption) (chan *Data, chan error) {
 	// create the queue to process requests
 	queue := NewQueue(15*time.Minute/15, 15*time.Minute, true, make(chan *Request), make(chan *Response), options...)
 	// create the temp results channel
 	data := make(chan *Data)
-	errors := make(chan *APIError)
+	errors := make(chan error)
 	// create the request object
 	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/%s/followers", api.baseURL, id), v, nil)
 	// start the requests channel processor
@@ -25,7 +25,7 @@ func (api *Twitter) GetUserFollowers(id string, v url.Values, options ...QueueOp
 	queue.requestsChannel <- request
 
 	// async process the response channel
-	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
+	go (func(q *Queue, d chan *Data, e chan error, req *Request) {
 		// on done close channels
 		// close data channel
 		defer close(d)
@@ -80,12 +80,12 @@ func (api *Twitter) GetUserFollowers(id string, v url.Values, options ...QueueOp
 // Official Documentation: https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following
 // Authentication Methods: OAuth 1.0a User Context, OAuth 2.0 Bearer Token
 // Rate Limit: 15/15m (app), 15/15m (user)
-func (api *Twitter) GetUserFollowing(id string, v url.Values, options ...QueueOption) (chan *Data, chan *APIError) {
+func (api *Twitter) GetUserFollowing(id string, v url.Values, options ...QueueOption) (chan *Data, chan error) {
 	// create the queue to process requests
 	queue := NewQueue(15*time.Minute/15, 15*time.Minute, true, make(chan *Request), make(chan *Response), options...)
 	// create the temp results channel
 	data := make(chan *Data)
-	errors := make(chan *APIError)
+	errors := make(chan error)
 	// create the request object
 	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/%s/following", api.baseURL, id), v, nil)
 	// start the requests channel processor
@@ -94,7 +94,7 @@ func (api *Twitter) GetUserFollowing(id string, v url.Values, options ...QueueOp
 	queue.requestsChannel <- request
 
 	// async process the response channel
-	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
+	go (func(q *Queue, d chan *Data, e chan error, req *Request) {
 		// on done close channels
 		// close data channel
 		defer close(d)
@@ -149,12 +149,12 @@ func (api *Twitter) GetUserFollowing(id string, v url.Values, options ...QueueOp
 // Official Documentation: https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users
 // Authentication Methods: OAuth 1.0a User Context, OAuth 2.0 Bearer Token
 // Rate Limit: 300/15m (app), 900/15m (user)
-func (api *Twitter) GetUsers(v url.Values, options ...QueueOption) (chan *Data, chan *APIError) {
+func (api *Twitter) GetUsers(v url.Values, options ...QueueOption) (chan *Data, chan error) {
 	// create the queue to process requests
 	queue := NewQueue(15*time.Minute/15, 15*time.Minute, true, make(chan *Request), make(chan *Response), options...)
 	// create the temp results channel
 	data := make(chan *Data)
-	errors := make(chan *APIError)
+	errors := make(chan error)
 	// create the request object
 	request, _ := NewRquest("GET", fmt.Sprintf("%s/users", api.baseURL), v, nil)
 	// start the requests channel processor
@@ -163,7 +163,7 @@ func (api *Twitter) GetUsers(v url.Values, options ...QueueOption) (chan *Data, 
 	queue.requestsChannel <- request
 
 	// async process the response channel
-	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
+	go (func(q *Queue, d chan *Data, e chan error, req *Request) {
 		// on done close channels
 		// close data channel
 		defer close(d)
@@ -199,12 +199,12 @@ func (api *Twitter) GetUsers(v url.Values, options ...QueueOption) (chan *Data, 
 // Official Documentation: https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-by
 // Authentication Methods: OAuth 1.0a User Context, OAuth 2.0 Bearer Token
 // Rate Limit: 300/15m (app), 900/15m (user)
-func (api *Twitter) GetUsersBy(v url.Values, options ...QueueOption) (chan *Data, chan *APIError) {
+func (api *Twitter) GetUsersBy(v url.Values, options ...QueueOption) (chan *Data, chan error) {
 	// create the queue to process requests
 	queue := NewQueue(15*time.Minute/15, 15*time.Minute, true, make(chan *Request), make(chan *Response), options...)
 	// create the temp results channel
 	data := make(chan *Data)
-	errors := make(chan *APIError)
+	errors := make(chan error)
 	// create the request object
 	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/by", api.baseURL), v, nil)
 	// start the requests channel processor
@@ -213,7 +213,7 @@ func (api *Twitter) GetUsersBy(v url.Values, options ...QueueOption) (chan *Data
 	queue.requestsChannel <- request
 
 	// async process the response channel
-	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
+	go (func(q *Queue, d chan *Data, e chan error, req *Request) {
 		// on done close channels
 		// close data channel
 		defer close(d)
@@ -249,12 +249,12 @@ func (api *Twitter) GetUsersBy(v url.Values, options ...QueueOption) (chan *Data
 // Official Documentation: https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-id
 // Authentication Methods: OAuth 1.0a User Context, OAuth 2.0 Bearer Token
 // Rate Limit: 300/15m (app), 900/15m (user)
-func (api *Twitter) GetUserByID(id string, v url.Values, options ...QueueOption) (chan *Data, chan *APIError) {
+func (api *Twitter) GetUserByID(id string, v url.Values, options ...QueueOption) (chan *Data, chan error) {
 	// create the queue to process requests
 	queue := NewQueue(15*time.Minute/15, 15*time.Minute, true, make(chan *Request), make(chan *Response), options...)
 	// create the temp results channel
 	data := make(chan *Data)
-	errors := make(chan *APIError)
+	errors := make(chan error)
 	// create the request object
 	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/%s", api.baseURL, id), v, nil)
 	// start the requests channel processor
@@ -263,7 +263,7 @@ func (api *Twitter) GetUserByID(id string, v url.Values, options ...QueueOption)
 	queue.requestsChannel <- request
 
 	// async process the response channel
-	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
+	go (func(q *Queue, d chan *Data, e chan error, req *Request) {
 		// on done close channels
 		// close data channel
 		defer close(d)
@@ -300,12 +300,12 @@ func (api *Twitter) GetUserByID(id string, v url.Values, options ...QueueOption)
 // Official Documentation: https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-by-username-username
 // Authentication Methods: OAuth 1.0a User Context, OAuth 2.0 Bearer Token
 // Rate Limit: 300/15m (app), 900/15m (user)
-func (api *Twitter) GetUsersByUserName(username string, v url.Values, options ...QueueOption) (chan *Data, chan *APIError) {
+func (api *Twitter) GetUsersByUserName(username string, v url.Values, options ...QueueOption) (chan *Data, chan error) {
 	// create the queue to process requests
 	queue := NewQueue(15*time.Minute/15, 15*time.Minute, true, make(chan *Request), make(chan *Response), options...)
 	// create the temp results channel
 	data := make(chan *Data)
-	errors := make(chan *APIError)
+	errors := make(chan error)
 	// create the request object
 	request, _ := NewRquest("GET", fmt.Sprintf("%s/users/by/username/%s", api.baseURL, username), v, nil)
 	// start the requests channel processor
@@ -314,7 +314,7 @@ func (api *Twitter) GetUsersByUserName(username string, v url.Values, options ..
 	queue.requestsChannel <- request
 
 	// async process the response channel
-	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
+	go (func(q *Queue, d chan *Data, e chan error, req *Request) {
 		// on done close channels
 		// close data channel
 		defer close(d)

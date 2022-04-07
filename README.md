@@ -18,22 +18,22 @@ go get github.com/cvcio/twitter
 | Method | Implemented | OAuth | Rate Limit | Official Documentation |
 |--------|----------|------|------------|------------------------|
 | `VerifyCredentials` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | - | - |
-| `GetUserFollowers` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 15/15m (app), 15/15m (user) | [Get User Followers](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-followers) |
-| `GetUserFollowing` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 15/15m (app), 15/15m (user) | [Get User Following](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
-| `GetUsers` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Users](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
-| `GetUsersBy` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Users By](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
-| `GetUserByID` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get User By Id](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
-| `GetUsersByUserName` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Users By Screen Name](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
+| `GetUserFollowers` | Yes | OAuth 2.0 Bearer Token | 15/15m (app), 15/15m (user) | [Get User Followers](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-followers) |
+| `GetUserFollowing` | Yes | OAuth 2.0 Bearer Token | 15/15m (app), 15/15m (user) | [Get User Following](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
+| `GetUsers` | Yes | OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Users](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
+| `GetUsersBy` | Yes | OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Users By](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
+| `GetUserByID` | Yes | OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get User By Id](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
+| `GetUsersByUserName` | Yes | OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Users By Screen Name](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) |
 | `GetUserTweets` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 1500/15m (app), 900/15m (user) | [Get User Tweets](https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-tweets) |
 | `GetUserMentions` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 450/15m (app), 180/15m (user) | [Get User Mentions](https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-mentions) |
-| `GetTweets` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Tweets](https://developer.twitter.com/en/docs/twitter-api/tweets/lookup/api-reference/get-tweets) |
-| `GetTweetByID` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Tweets By Id](https://developer.twitter.com/en/docs/twitter-api/tweets/lookup/api-reference/get-tweets-id) |
+| `GetTweets` | Yes | OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Tweets](https://developer.twitter.com/en/docs/twitter-api/tweets/lookup/api-reference/get-tweets) |
+| `GetTweetByID` | Yes | OAuth 2.0 Bearer Token | 300/15m (app), 900/15m (user) | [Get Tweets By Id](https://developer.twitter.com/en/docs/twitter-api/tweets/lookup/api-reference/get-tweets-id) |
 | `GetFilterStream` | Yes | OAuth 2.0 Bearer Token | 50/15m (app) | [Filter Stream](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference/get-tweets-search-stream) |
 | `GetFilterStreamRules` | Yes | OAuth 2.0 Bearer Token | 450/15m (app) | [Get Filter Stream Rules](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference/get-tweets-search-stream-rules)
 | `PostFilterStreamRules` | Yes | OAuth 2.0 Bearer Token | 450/15m (app) | [Post Filter Stream Rules](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference/post-tweets-search-stream-rules)
 | `GetSampleStream` | Yes | OAuth 2.0 Bearer Token | 50/15m (app) | [Sample Stream](https://developer.twitter.com/en/docs/twitter-api/tweets/sampled-stream/api-reference/get-tweets-sample-stream)
-| `GetTweetsSearchRecent` | Yes | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 450/15m (app), 180/15m (user) | [Sample Stream](https://developer.twitter.com/en/docs/twitter-api/tweets/search/api-reference/get-tweets-search-recent)
-| `GetTweetsSearchAll` | - | OAuth 1.0a User Context, OAuth 2.0 Bearer Token | 300/15m (app), 1/1s (user) | [Search Tweets](https://developer.twitter.com/en/docs/twitter-api/tweets/full-archive-search/api-reference/get-tweets-search-all)
+| `GetTweetsSearchRecent` | Yes | OAuth 2.0 Bearer Token | 450/15m (app), 180/15m (user) | [Search Tweets - Recent](https://developer.twitter.com/en/docs/twitter-api/tweets/search/api-reference/get-tweets-search-recent)
+| `GetTweetsSearchAll` | - | OAuth 2.0 Bearer Token | 300/15m (app), 1/1s (user) | [Search Tweets - All](https://developer.twitter.com/en/docs/twitter-api/tweets/search/api-reference/get-tweets-search-all)
 
 ### Usage
 
@@ -179,8 +179,6 @@ import (
 func main() {
 	consumerKey := flag.String("consumer-key", "", "twitter API consumer key")
 	consumerSecret := flag.String("consumer-secret", "", "twitter API consumer secret")
-	accessToken := flag.String("access-token", "", "twitter API access token")
-	accessTokenSecret := flag.String("access-token-secret", "", "twitter API access token secret")
 
 	id := flag.String("id", "", "user id")
 
@@ -188,7 +186,7 @@ func main() {
 
 	start := time.Now()
 
-	api, err := twitter.NewTwitterWithContext(*consumerKey, *consumerSecret, *accessToken, *accessTokenSecret)
+	api, err := twitter.NewTwitter(*consumerKey, *consumerSecret)
 	if err != nil {
 		panic(err)
 	}

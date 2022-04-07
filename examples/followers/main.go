@@ -14,8 +14,6 @@ import (
 func main() {
 	consumerKey := flag.String("consumer-key", "", "twitter API consumer key")
 	consumerSecret := flag.String("consumer-secret", "", "twitter API consumer secret")
-	accessToken := flag.String("access-token", "", "twitter API access token")
-	accessTokenSecret := flag.String("access-token-secret", "", "twitter API access token secret")
 
 	id := flag.String("id", "", "user id")
 
@@ -23,7 +21,7 @@ func main() {
 
 	start := time.Now()
 
-	api, err := twitter.NewTwitterWithContext(*consumerKey, *consumerSecret, *accessToken, *accessTokenSecret)
+	api, err := twitter.NewTwitter(*consumerKey, *consumerSecret)
 	if err != nil {
 		panic(err)
 	}
@@ -32,7 +30,7 @@ func main() {
 
 	v := url.Values{}
 	// set size of response ids to 1000
-	v.Add("max_results", "1000")
+	v.Add("max_results", "250")
 	// set user fields to return
 	v.Add("user.fields", "created_at,description,id,location,name,pinned_tweet_id,profile_image_url,protected,public_metrics,url,username,verified")
 	// set tweet fields to return

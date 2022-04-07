@@ -11,12 +11,12 @@ import (
 // Official Documentation: https://developer.twitter.com/en/docs/twitter-api/tweets/search/api-reference/get-tweets-search-recent
 // Authentication Methods: OAuth 1.0a User Context, OAuth 2.0 Bearer Token
 // Rate Limit: 450/15m (app), 180/15m (user)
-func (api *Twitter) GetTweetsSearchRecent(v url.Values, options ...QueueOption) (chan *Data, chan *APIError) {
+func (api *Twitter) GetTweetsSearchRecent(v url.Values, options ...QueueOption) (chan *Data, chan error) {
 	// create the queue to process requests
 	queue := NewQueue(15*time.Minute/450, 15*time.Minute, true, make(chan *Request), make(chan *Response), options...)
 	// create the temp results channel
 	data := make(chan *Data)
-	errors := make(chan *APIError)
+	errors := make(chan error)
 	// create the request object
 	request, _ := NewRquest("GET", fmt.Sprintf("%s/tweets/search/recent", api.baseURL), v, nil)
 	// start the requests channel processor
@@ -25,7 +25,7 @@ func (api *Twitter) GetTweetsSearchRecent(v url.Values, options ...QueueOption) 
 	queue.requestsChannel <- request
 
 	// async process the response channel
-	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
+	go (func(q *Queue, d chan *Data, e chan error, req *Request) {
 		// on done close channels
 		// close data channel
 		defer close(d)
@@ -65,12 +65,12 @@ func (api *Twitter) GetTweetsSearchRecent(v url.Values, options ...QueueOption) 
 // Official Documentation: https://developer.twitter.com/en/docs/twitter-api/tweets/full-archive-search/api-reference/get-tweets-search-all
 // Authentication Methods: OAuth 2.0 Bearer Token
 // Rate Limit: 300/15m (app), 1/1s (user)
-func (api *Twitter) GetTweetsSearchAll(v url.Values, options ...QueueOption) (chan *Data, chan *APIError) {
+func (api *Twitter) GetTweetsSearchAll(v url.Values, options ...QueueOption) (chan *Data, chan error) {
 	// create the queue to process requests
 	queue := NewQueue(15*time.Minute/300, 15*time.Minute, true, make(chan *Request), make(chan *Response), options...)
 	// create the temp results channel
 	data := make(chan *Data)
-	errors := make(chan *APIError)
+	errors := make(chan error)
 	// create the request object
 	request, _ := NewRquest("GET", fmt.Sprintf("%s/tweets/search/all", api.baseURL), v, nil)
 	// start the requests channel processor
@@ -79,7 +79,7 @@ func (api *Twitter) GetTweetsSearchAll(v url.Values, options ...QueueOption) (ch
 	queue.requestsChannel <- request
 
 	// async process the response channel
-	go (func(q *Queue, d chan *Data, e chan *APIError, req *Request) {
+	go (func(q *Queue, d chan *Data, e chan error, req *Request) {
 		// on done close channels
 		// close data channel
 		defer close(d)
