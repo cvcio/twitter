@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"log"
 	"net/url"
 	"strconv"
 	"time"
@@ -19,8 +20,6 @@ func main() {
 
 	flag.Parse()
 
-	start := time.Now()
-
 	api, err := twitter.NewTwitter(*consumerKey, *consumerSecret)
 	if err != nil {
 		panic(err)
@@ -30,7 +29,7 @@ func main() {
 
 	v := url.Values{}
 	// set size of response ids to 1000
-	v.Add("max_results", "250")
+	v.Add("max_results", "1000")
 	// set user fields to return
 	v.Add("user.fields", "created_at,description,id,location,name,pinned_tweet_id,profile_image_url,protected,public_metrics,url,username,verified")
 	// set tweet fields to return
@@ -69,9 +68,6 @@ func main() {
 			)
 		}
 
-		fmt.Printf("Result Count: %d Next Token: %s\n", r.Meta.ResultCount, r.Meta.NextToken)
+		log.Printf("Result Count: %d Next Token: %s\n", r.Meta.ResultCount, r.Meta.NextToken)
 	}
-
-	end := time.Now()
-	fmt.Printf("Done in %s", end.Sub(start))
 }

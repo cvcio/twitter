@@ -19,6 +19,17 @@ var (
 )
 
 // Test_API_NewAPI_Client Test New Twitter API Client
+// func Test_NewTwitter_PKCE(t *testing.T) {
+// 	api, err := twitter.NewTwitterWithPKCE(consumerKey, consumerSecret, accessToken, accessTokenSecret)
+// 	if err != nil {
+// 		t.Fatalf("Couldn't create Twitter API HTTP Client")
+// 	}
+// 	if api.GetClient() == nil {
+// 		t.Fatalf("Twitter API HTTP Client returned nil")
+// 	}
+// }
+
+// Test_API_NewAPI_Client Test New Twitter API Client
 func Test_NewTwitter_Client(t *testing.T) {
 	api, err := twitter.NewTwitter(consumerKey, consumerSecret)
 	if err != nil {
@@ -531,16 +542,17 @@ func Test_GetFilterStream(t *testing.T) {
 	var f twitter.StreamData
 	s, serr := api.GetFilterStream(v)
 	if serr != nil {
-		t.Fatalf("Twitter API GetSampleStream Error: %s", serr.Error())
+		t.Fatalf("Twitter API GetFilterStream Error: %s", serr.Error())
 	}
-	for t := range s.C {
-		f, _ = t.(twitter.StreamData)
+	for x := range s.C {
+		f, _ = x.(twitter.StreamData)
+		t.Log(f)
 		break
 	}
 	s.Stop()
 
-	if f.Tweet.ID == "" {
-		t.Fatalf("Twitter API GetSampleStream Error. Should have return a valid tweet struct, got %v", f.Tweet)
+	if f.Data.ID == "" {
+		t.Fatalf("Twitter API GetFilterStream Error. Should have return a valid tweet struct, got %v", f.Data)
 	}
 }
 
@@ -566,8 +578,8 @@ func Test_GetSampleStream(t *testing.T) {
 	}
 	s.Stop()
 
-	if f.Tweet.ID == "" {
-		t.Fatalf("Twitter API GetSampleStream Error. Should have return a valid tweet struct, got %v", f.Tweet)
+	if f.Data.ID == "" {
+		t.Fatalf("Twitter API GetSampleStream Error. Should have return a valid tweet struct, got %v", f.Data)
 	}
 }
 

@@ -45,3 +45,4 @@ bot.yaml
 *.jsondist/
 .env
 examples/the-follower
+examples/mediawatch

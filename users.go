@@ -50,7 +50,7 @@ func (api *Twitter) GetUserFollowers(id string, v url.Values, options ...QueueOp
 
 			// if there is a next page, transform the original request object
 			// by setting the `pagination_token` parameter to get the next page
-			if res.Results.Meta.NextToken != "" && q.auto {
+			if res.Results.Meta != nil && res.Results.Meta.NextToken != "" && q.auto {
 				// create new url values and add the pagination token
 				nv := url.Values{}
 				nv.Add("pagination_token", res.Results.Meta.NextToken)
@@ -119,7 +119,7 @@ func (api *Twitter) GetUserFollowing(id string, v url.Values, options ...QueueOp
 
 			// if there is a next page, transform the original request object
 			// by setting the `pagination_token` parameter to get the next page
-			if res.Results.Meta.NextToken != "" && q.auto {
+			if res.Results.Meta != nil && res.Results.Meta.NextToken != "" && q.auto {
 				// create new url values and add the pagination token
 				nv := url.Values{}
 				nv.Add("pagination_token", res.Results.Meta.NextToken)

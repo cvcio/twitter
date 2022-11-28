@@ -59,6 +59,60 @@ func NewTwitter(consumerKey, consumerSecret string) (*Twitter, error) {
 	return api, nil
 }
 
+// NewTwitter returns a new Twitter API v2 Client using OAuth 2.0 based authentication.
+// This method is usufull when you only need to make Application-Only requests.
+// Official Documentation: https://developer.twitter.com/en/docs/authentication/oauth-2-0
+// Scopes: https://developer.twitter.com/en/docs/authentication/oauth-2-0/authorization-code
+// func NewTwitterWithPKCE(consumerKey, consumerSecret, accessToken, accessTokenSecret string) (*Twitter, error) {
+// 	// create new context
+// 	ctx := context.Background()
+
+// 	// init new Twitter client
+// 	api := &Twitter{
+// 		baseURL: BaseURL,
+// 	}
+
+// 	// oauth2 configures a client that uses app credentials to keep a fresh token
+// 	config := &oauth2.Config{
+// 		ClientID:     consumerKey,
+// 		ClientSecret: consumerSecret,
+// 		Scopes: []string{
+// 			"tweet.read",
+// 			"users.read",
+// 			"offline.access",
+// 		},
+// 		Endpoint: oauth2.Endpoint{
+// 			AuthURL:  AuthorizeTokenURL,
+// 			TokenURL: TokenURL,
+// 		},
+// 	}
+
+// 	// Redirect user to consent page to ask for permission
+// 	// for the scopes specified above.
+// 	url := config.AuthCodeURL("state", oauth2.AccessTypeOffline,
+// 		oauth2.SetAuthURLParam("code_challenge", "challenge"),
+// 		oauth2.SetAuthURLParam("code_challenge_method", "plain"),
+// 		oauth2.SetAuthURLParam("response_type", "code"),
+// 	)
+// 	fmt.Printf("Visit the URL for the auth dialog: %v", url)
+
+// 	// Use the authorization code that is pushed to the redirect
+// 	// URL. Exchange will do the handshake to retrieve the
+// 	// initial access token. The HTTP Client returned by
+// 	// conf.Client will refresh the token as necessary.
+// 	var code string
+// 	if _, err := fmt.Scan(&code); err != nil {
+// 		return nil, err
+// 	}
+// 	tok, err := config.Exchange(ctx, code)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	api.client = config.Client(ctx, tok)
+// 	return api, nil
+// }
+
 // NewTwitterWithContext returns a new Twitter API v2 Client using OAuth 1.0 based authentication.
 // This method is useful when you need to make API requests, on behalf of a Twitter account.
 // Official Documentation: https://developer.twitter.com/en/docs/authentication/oauth-1-0a
