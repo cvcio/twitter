@@ -37,9 +37,9 @@ func (stream *Stream) start(urlStr string, v url.Values) error {
 }
 
 func jsonToKnownType(j []byte) interface{} {
-	var tweet StreamData
-	json.Unmarshal(j, &tweet)
-	return tweet
+	var data StreamData
+	json.Unmarshal(j, &data)
+	return data
 }
 
 func (stream *Stream) listen(response *http.Response) {
@@ -54,11 +54,12 @@ func (stream *Stream) listen(response *http.Response) {
 		line := scanner.Bytes()
 
 		// Contuinue if empty bytes returned from the stream
+		// Read more about consuming streaming data: https://developer.twitter.com/en/docs/tutorials/consuming-streaming-data
 		if len(line) == 0 {
+			fmt.Println("Empty bytes received")
 			continue
 		}
 
-		// stream.C <- jsonToKnownType(line)
 		stream.C <- jsonToKnownType(bytes.TrimRight(line, "\r\n"))
 	}
 }
