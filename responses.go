@@ -19,9 +19,9 @@ type Meta struct {
 
 // Data Struct
 type Data struct {
-	Data     interface{} `json:"data,omitempty"`
-	Includes Includes    `json:"includes,omitempty"`
-	Meta     Meta        `json:"meta,omitempty"`
+	Data     *interface{} `json:"data,omitempty"`
+	Includes *Includes    `json:"includes,omitempty"`
+	Meta     *Meta        `json:"meta,omitempty"`
 }
 
 // Twitter Specific Data
@@ -59,8 +59,8 @@ type Annotation struct {
 
 // ContextAnnotation response object.
 type ContextAnnotation struct {
-	Domain Annotation `json:"domain,omitempty"`
-	Entity Annotation `json:"entity,omitempty"`
+	Domain *Annotation `json:"domain,omitempty"`
+	Entity *Annotation `json:"entity,omitempty"`
 }
 
 // Entity response object.
@@ -71,7 +71,7 @@ type Entity struct {
 
 // EntityAnnotation response object.
 type EntityAnnotation struct {
-	Entity
+	*Entity
 	Probability    float64 `json:"probability,omitempty"`
 	Type           string  `json:"type,omitempty"`
 	NormalizedText string  `json:"normalized_text,omitempty"`
@@ -79,7 +79,7 @@ type EntityAnnotation struct {
 
 // EntityURL response object.
 type EntityURL struct {
-	Entity
+	*Entity
 	URL         string `json:"url,omitempty"`
 	ExpandedURL string `json:"expanded_url,omitempty"`
 	DisplayURL  string `json:"display_url,omitempty"`
@@ -88,23 +88,23 @@ type EntityURL struct {
 
 // EntityTag response object.
 type EntityTag struct {
-	Entity
+	*Entity
 	Tag string `json:"tag,omitempty"`
 }
 
 // EntityMention response object.
 type EntityMention struct {
-	Entity
+	*Entity
 	UserName string `json:"username,omitempty"`
 }
 
 // Entities response object.
 type Entities struct {
-	Annotations []EntityAnnotation `json:"annotations,omitempty"`
-	URLs        []EntityURL        `json:"urls,omitempty"`
-	HashTags    []EntityTag        `json:"hashtags,omitempty"`
-	Mentions    []EntityMention    `json:"mentions,omitempty"`
-	CashTags    []EntityTag        `json:"cashtags,omitempty"`
+	Annotations []*EntityAnnotation `json:"annotations,omitempty"`
+	URLs        []*EntityURL        `json:"urls,omitempty"`
+	HashTags    []*EntityTag        `json:"hashtags,omitempty"`
+	Mentions    []*EntityMention    `json:"mentions,omitempty"`
+	CashTags    []*EntityTag        `json:"cashtags,omitempty"`
 }
 
 // Withheld response object.
@@ -133,16 +133,33 @@ type UserMetrics struct {
 	Listed    int `json:"listed_count,omitempty"`
 }
 
+type MediaMetrics struct {
+	Playback0Count   int `json:"playback_0_count,omitempty"`
+	Playback100Count int `json:"playback_100_count,omitempty"`
+	Playback25Count  int `json:"playback_25_count,omitempty"`
+	Playback50Count  int `json:"playback_50_count,omitempty"`
+	Playback75Count  int `json:"playback_75_count,omitempty"`
+	ViewCount        int `json:"view_count,omitempty"`
+}
+
 // Includes response object.
 type Includes struct {
-	Tweets []Tweet `json:"tweets,omitempty"`
-	Users  []User  `json:"users,omitempty"`
+	Tweets []*Tweet `json:"tweets,omitempty"`
+	Users  []*User  `json:"users,omitempty"`
+	Media  []*Media `json:"media,omitempty"`
 }
 
 // Error response object.
-type Error struct{}
+type Error struct {
+	Message string `json:"message,omitempty"`
+	Sent    string `json:"sent.omitempty"`
+}
+
 type StreamData struct {
-	Tweet Tweet `json:"data"`
+	Data          *Tweet       `json:"data"`
+	Includes      *Includes    `json:"includes"`
+	MatchingRules []*RulesData `json:"matching_rules"`
+	Error         *Error       `json:"error"`
 }
 
 // Tweet response object as returned from /2/tweets endpoint. For detailed information
@@ -169,12 +186,19 @@ type Tweet struct {
 	ReplySettings      string               `json:"reply_settings,omitempty"`
 	Source             string               `json:"source,omitempty"`
 	Includes           *Includes            `json:"includes,omitempty"`
+	EditHistoryIDs     []string             `json:"edit_history_ids"`
 	Errors             *Error               `json:"errors,omitempty"`
+}
+
+type EditControls struct {
+	EditsRemaining int    `json:"edits_remaining,omitempty"`
+	IsEditEligible bool   `json:"is_edit_eligible,omitempty"`
+	EditableUntil  string `json:"editable_until,omitempty"`
 }
 
 // CreatedAtTime is a convenience wrapper that returns the Created_at time, parsed as a time.Time struct
 func (t Tweet) CreatedAtTime() (time.Time, error) {
-	return time.Parse(time.RubyDate, t.CreatedAt)
+	return time.Parse(time.RFC3339Nano, t.CreatedAt)
 }
 
 // User response object as returned from /2/users endpoint. For detailed information
@@ -200,7 +224,7 @@ type User struct {
 
 // CreatedAtTime is a convenience wrapper that returns the Created_at time, parsed as a time.Time struct
 func (u User) CreatedAtTime() (time.Time, error) {
-	return time.Parse(time.RubyDate, u.CreatedAt)
+	return time.Parse(time.RFC3339Nano, u.CreatedAt)
 }
 
 type RulesData struct {
@@ -215,27 +239,52 @@ type RulesSummary struct {
 	Deleted    int `json:"deleted,omitempty"`
 	NotDeleted int `json:"not_deleted,omitempty"`
 }
+
 type RulesMeta struct {
 	Sent        time.Time     `json:"sent,omitempty"`
 	ResultCount int           `json:"result_count,omitempty"`
 	Summary     *RulesSummary `json:"summary,omitempty"`
 }
+
 type RulesError struct {
 	Value string `json:"value,omitempty"`
 	Id    string `json:"id,omitempty"`
 	Title string `json:"title,omitempty"`
 	Type  string `json:"type,omitempty"`
 }
+
 type RulesDelete struct {
 	Ids []string `json:"ids,omitempty"`
 }
 
 type Rules struct {
+	Data   []*RulesData             `json:"data"`
 	Add    []*RulesData             `json:"add"`
 	Delete *RulesDelete             `json:"delete"`
-	Data   []*RulesData             `json:"data"`
 	Meta   *RulesMeta               `json:"meta"`
 	Errors []map[string]interface{} `json:"errors"`
+}
+
+type Media struct {
+	MediaKey         string
+	Type             string
+	URL              string
+	DurationMS       int
+	Height           int
+	Width            int
+	NonPublicMetrics *MediaMetrics
+	OrganicMetrics   *MediaMetrics
+	PromotedMetrics  *MediaMetrics
+	PublicMetrics    *MediaMetrics
+	PreviewImageURL  string
+	AltText          string
+	Variants         []*MediaVariant
+}
+
+type MediaVariant struct {
+	BitRate     int
+	ContentType string
+	URL         string
 }
 
 /*
