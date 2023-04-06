@@ -56,7 +56,6 @@ func (stream *Stream) listen(response *http.Response) {
 		// Contuinue if empty bytes returned from the stream
 		// Read more about consuming streaming data: https://developer.twitter.com/en/docs/tutorials/consuming-streaming-data
 		if len(line) == 0 {
-			fmt.Println("Empty bytes received")
 			continue
 		}
 
