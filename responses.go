@@ -169,7 +169,7 @@ type Tweet struct {
 	Text               string               `json:"text,omitempty"`
 	CreatedAt          string               `json:"created_at,omitempty"`
 	AuthorID           string               `json:"author_id,omitempty"`
-	ConversationID     string               `json:"converstation_id,omitempty"`
+	ConversationID     string               `json:"conversation_id,omitempty"`
 	InReplyToUserID    string               `json:"in_reply_to_user_id,omitempty"`
 	ReferencedTweets   []*ReferencedTweet   `json:"referenced_tweets,omitempty"`
 	Attachments        *Attachment          `json:"attachments,omitempty"`
